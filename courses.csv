@@ -1,0 +1,201 @@
+Course ID,Course Name
+FP0,Fundamentals in Python
+FJ1,Fundamentals in Javascript
+FC2,Fundamentals in C#
+FJ3,Fundamentals in Java
+FC4,Fundamentals in C
+FC5,Fundamentals in C++
+FP6,Fundamentals in PHP
+FK7,Fundamentals in Kotlin
+FR8,Fundamentals in R
+FH9,Fundamentals in HTML
+FC10,Fundamentals in CSS
+FS11,Fundamentals in Swift
+FG12,Fundamentals in GO
+FR13,Fundamentals in Ruby
+FP14,Fundamentals in Pascal
+FD15,Fundamentals in Dart
+FP16,Fundamentals in Pascal
+FR17,Fundamentals in Rust
+FC18,Fundamentals in Cobol
+FC19,Fundamentals in Calculus
+FC20,Fundamentals in Calculus
+FE21,Fundamentals in Electronic Circuit Analysis
+FS22,Fundamentals in Statistics
+FC23,Fundamentals in Chemistry
+FB24,Fundamentals in Biology
+FP25,Fundamentals in Physics
+FI26,Fundamentals in Information Technology
+FC27,Fundamentals in Calculus 2
+FE28,Fundamentals in Electronics
+FP29,Fundamentals in Physical Education
+FH30,Fundamentals in Health and Nutrition
+FH31,Fundamentals in Home and Family Life Education
+FC32,Fundamentals in Civics
+FC33,Fundamentals in Carpentry
+FW34,Fundamentals in Welding
+FT35,Fundamentals in Telecommunications
+FM36,Fundamentals in Machinery
+FW37,Fundamentals in Web DEvelopement
+FD38,Fundamentals in Database Management
+FD39,Fundamentals in Discrete Mathematics
+NP0,Novice Python
+NJ1,Novice Javascript
+NC2,Novice C#
+NJ3,Novice Java
+NC4,Novice C
+NC5,Novice C++
+NP6,Novice PHP
+NK7,Novice Kotlin
+NR8,Novice R
+NH9,Novice HTML
+NC10,Novice CSS
+NS11,Novice Swift
+NG12,Novice GO
+NR13,Novice Ruby
+NP14,Novice Pascal
+ND15,Novice Dart
+NP16,Novice Pascal
+NR17,Novice Rust
+NC18,Novice Cobol
+NC19,Novice Calculus
+NC20,Novice Calculus
+NE21,Novice Electronic Circuit Analysis
+NS22,Novice Statistics
+NC23,Novice Chemistry
+NB24,Novice Biology
+NP25,Novice Physics
+NI26,Novice Information Technology
+NC27,Novice Calculus 2
+NE28,Novice Electronics
+NP29,Novice Physical Education
+NH30,Novice Health and Nutrition
+NH31,Novice Home and Family Life Education
+NC32,Novice Civics
+NC33,Novice Carpentry
+NW34,Novice Welding
+NT35,Novice Telecommunications
+NM36,Novice Machinery
+NW37,Novice Web DEvelopement
+ND38,Novice Database Management
+ND39,Novice Discrete Mathematics
+IP0,Intermediate Python
+IJ1,Intermediate Javascript
+IC2,Intermediate C#
+IJ3,Intermediate Java
+IC4,Intermediate C
+IC5,Intermediate C++
+IP6,Intermediate PHP
+IK7,Intermediate Kotlin
+IR8,Intermediate R
+IH9,Intermediate HTML
+IC10,Intermediate CSS
+IS11,Intermediate Swift
+IG12,Intermediate GO
+IR13,Intermediate Ruby
+IP14,Intermediate Pascal
+ID15,Intermediate Dart
+IP16,Intermediate Pascal
+IR17,Intermediate Rust
+IC18,Intermediate Cobol
+IC19,Intermediate Calculus
+IC20,Intermediate Calculus
+IE21,Intermediate Electronic Circuit Analysis
+IS22,Intermediate Statistics
+IC23,Intermediate Chemistry
+IB24,Intermediate Biology
+IP25,Intermediate Physics
+II26,Intermediate Information Technology
+IC27,Intermediate Calculus 2
+IE28,Intermediate Electronics
+IP29,Intermediate Physical Education
+IH30,Intermediate Health and Nutrition
+IH31,Intermediate Home and Family Life Education
+IC32,Intermediate Civics
+IC33,Intermediate Carpentry
+IW34,Intermediate Welding
+IT35,Intermediate Telecommunications
+IM36,Intermediate Machinery
+IW37,Intermediate Web DEvelopement
+ID38,Intermediate Database Management
+ID39,Intermediate Discrete Mathematics
+AP0,Advanced Python
+AJ1,Advanced Javascript
+AC2,Advanced C#
+AJ3,Advanced Java
+AC4,Advanced C
+AC5,Advanced C++
+AP6,Advanced PHP
+AK7,Advanced Kotlin
+AR8,Advanced R
+AH9,Advanced HTML
+AC10,Advanced CSS
+AS11,Advanced Swift
+AG12,Advanced GO
+AR13,Advanced Ruby
+AP14,Advanced Pascal
+AD15,Advanced Dart
+AP16,Advanced Pascal
+AR17,Advanced Rust
+AC18,Advanced Cobol
+AC19,Advanced Calculus
+AC20,Advanced Calculus
+AE21,Advanced Electronic Circuit Analysis
+AS22,Advanced Statistics
+AC23,Advanced Chemistry
+AB24,Advanced Biology
+AP25,Advanced Physics
+AI26,Advanced Information Technology
+AC27,Advanced Calculus 2
+AE28,Advanced Electronics
+AP29,Advanced Physical Education
+AH30,Advanced Health and Nutrition
+AH31,Advanced Home and Family Life Education
+AC32,Advanced Civics
+AC33,Advanced Carpentry
+AW34,Advanced Welding
+AT35,Advanced Telecommunications
+AM36,Advanced Machinery
+AW37,Advanced Web DEvelopement
+AD38,Advanced Database Management
+AD39,Advanced Discrete Mathematics
+EP0,Expert Python
+EJ1,Expert Javascript
+EC2,Expert C#
+EJ3,Expert Java
+EC4,Expert C
+EC5,Expert C++
+EP6,Expert PHP
+EK7,Expert Kotlin
+ER8,Expert R
+EH9,Expert HTML
+EC10,Expert CSS
+ES11,Expert Swift
+EG12,Expert GO
+ER13,Expert Ruby
+EP14,Expert Pascal
+ED15,Expert Dart
+EP16,Expert Pascal
+ER17,Expert Rust
+EC18,Expert Cobol
+EC19,Expert Calculus
+EC20,Expert Calculus
+EE21,Expert Electronic Circuit Analysis
+ES22,Expert Statistics
+EC23,Expert Chemistry
+EB24,Expert Biology
+EP25,Expert Physics
+EI26,Expert Information Technology
+EC27,Expert Calculus 2
+EE28,Expert Electronics
+EP29,Expert Physical Education
+EH30,Expert Health and Nutrition
+EH31,Expert Home and Family Life Education
+EC32,Expert Civics
+EC33,Expert Carpentry
+EW34,Expert Welding
+ET35,Expert Telecommunications
+EM36,Expert Machinery
+EW37,Expert Web DEvelopement
+ED38,Expert Database Management
+ED39,Expert Discrete Mathematics
