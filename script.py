@@ -6,17 +6,6 @@ import mysql.connector
 import random2 as random
 from datetime import date
 
-def connectToDB():
-    conn = mysql.connector.connect(
-        user = username,
-        password = password,
-        host = host,  
-        database = database
-     )
-    cursor = conn.cursor()
-
-    return conn, cursor
-
 def generateUser(type, id):
 
     end_date = date.today()
@@ -47,11 +36,6 @@ def generateUser(type, id):
     'Birthday': birthday,
     'Password': password}
 
-host = "localhost"
-username = "DavidLynch"
-password = "tJ58FIU!uuV/3HS8"
-database = "comp3161_final_project"
-
 tableNames = ["Courses", 
             "Students", 
             "Lecturers",
@@ -63,14 +47,22 @@ database = "comp3161_final_project"
 header = [["Course ID", "Course Name"], 
         ["Student ID", "First Name", "Last Name", "Email", "Age", "Birthday", "Password"], 
         ["Lecturer ID", "First Name", "Last Name", "Email", "Age", "Birthday", "Password"],
-        ["Student ID", "Course ID", "Grade"],
+        ["Course ID", "Student ID", "Grade"],
         ["Lecturer ID", "Course ID"]]
 
 levels = ["Fundamentals in ", "Novice ", "Intermediate ", "Advanced ", "Expert "]
 courseSubjects = ["Python", "Javascript", "C#", "Java", "C", "C++", "PHP", "Kotlin", "R", "HTML", "CSS", "Swift", "GO", "Ruby", "Pascal", "Dart", "Pascal", "Rust", "Cobol", "Calculus", "Calculus", "Electronic Circuit Analysis", "Statistics", "Chemistry", "Biology", "Physics", "Information Technology", "Calculus 2", "Electronics", "Physical Education", "Health and Nutrition", "Home and Family Life Education", "Civics", "Carpentry", "Welding", "Telecommunications", "Machinery", "Web DEvelopement", "Database Management", "Discrete Mathematics"]
+
 courses = [[x[0] + y[0:1] + str(n), x+y] for x in levels for n, y in enumerate(courseSubjects)]
+courseStudents = []    
+        
+for count, course in enumerate(courses):
+    tempLst = []
+    for studCount in range(count*10, count*10+10):
+        tempLst += ["S" + str(studCount)]
+    courseStudents.append([course[0], tempLst])
+
 lecturers = []
-courseStudents = []
 courseLecturers = []
 
 for n in range(1, 6):
@@ -88,8 +80,6 @@ counter = 0
 # for n in courseLecturers:
 #     count += n[1].count("CourseID")
 # print(count)
-
-
 
 # def factorize(a, b, n):
 #     return n/a, (n%a)/b, (n%a)%b
@@ -115,7 +105,7 @@ try:
         f"CREATE TABLE {tableNames[0]}(\n",
         f"  `{header[0][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
         f"  `{header[0][1]}` VARCHAR(255)\n"
-        ");\n\n"])
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
 
     f.writelines([f"DROP TABLE IF EXISTS {tableNames[1]};\n",
         f"CREATE TABLE {tableNames[1]}(\n",
@@ -126,7 +116,7 @@ try:
         f"  {header[1][4]} INTEGER,\n",
         f"  {header[1][5]} DATE,\n",
         f"  {header[1][6]} VARCHAR(255)\n"
-        ");\n\n"])
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
     
     f.writelines([f"DROP TABLE IF EXISTS {tableNames[2]};\n",
         f"CREATE TABLE {tableNames[2]}(\n",
@@ -137,20 +127,20 @@ try:
         f"  {header[2][4]} INTEGER,\n",
         f"  {header[2][5]} DATE,\n",
         f"  {header[2][6]} VARCHAR(255)\n"
-        ");\n\n"])
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
 
     f.writelines([f"DROP TABLE IF EXISTS `{tableNames[3]}`;\n",
         f"CREATE TABLE `{tableNames[3]}`(\n",
         f"  `{header[3][0]}` VARCHAR(255),\n",
         f"  `{header[3][1]}` VARCHAR(255),\n",
         f"  {header[3][2]} INTEGER\n"
-        ");\n\n"])
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
     
     f.writelines([f"DROP TABLE IF EXISTS `{tableNames[4]}`;\n",
         f"CREATE TABLE `{tableNames[4]}`(\n",
         f"  `{header[4][0]}` VARCHAR(255),\n",
         f"  `{header[4][1]}` VARCHAR(255)\n"
-        ");\n\n"])    
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])    
 
     with open('courses.csv', 'w+', encoding = 'UTF8', newline = '') as c, open('students.csv', 'w+', encoding = 'UTF8', newline = '') as s, open('lecturers.csv', 'w+', encoding = 'UTF8', newline = '') as l, open('Courses_Students.csv', 'w+', encoding = 'UTF8', newline = '') as cs, open('Courses_Lecturer.csv', 'w+', encoding = 'UTF8', newline = '') as cl:
         writer = csv.writer(c)
@@ -163,10 +153,25 @@ try:
 
         writer = csv.writer(s)
         writer.writerow(header[1])
-        for n in range(100): #Change to appropriate value
+        for n in range(100000): #Change to appropriate value
             student = generateUser("S", n)
             writer.writerow([student['ID Number'], student['First Name'], student['Last Name'], student['Email'], student['Age'], student['Birthday'], student['Password']])
-                    
+
+            if n > 1999:
+                randNum = random.randint(3,6)
+                for x in range(randNum):
+                    randCourse = random.randint(0,199)
+                    while student['ID Number'] in courseStudents[randCourse][1]:
+                        randCourse = random.randint(0,199)
+                    courseStudents[randCourse][1] += [student['ID Number']]
+            else:
+                randNum = random.randint(3,5)
+                for x in range(randNum):
+                    randCourse = random.randint(0,199)
+                    while student['ID Number'] in courseStudents[randCourse][1]:
+                        randCourse = random.randint(0,199)
+                    courseStudents[randCourse][1] += [student['ID Number']]
+
             f.writelines([f"INSERT INTO {tableNames[1]} ",
             f"VALUES({student['ID Number']!r}, {student['First Name']!r}, {student['Last Name']!r}, {student['Email']!r}, {student['Age']!r}, {student['Birthday']!r}, {student['Password']!r});\n"])
         f.write("\n")
@@ -183,13 +188,16 @@ try:
         writer = csv.writer(cs)
         writer.writerow(header[3])
         for courseStudent in courseStudents:
-            for courseGrade in courseStudent[1]:
+            for courseStud in courseStudent[1]:
+                randGrade = random.randint(0,100)
                 f.writelines([f"INSERT INTO `{tableNames[3]}` ",
-                f"VALUES({courseStudent[0]!r}, {courseGrade[0]!r}, {courseGrade[1]!r});\n"])
-                writer.writerow([courseStudent[0], courseGrade[0], courseGrade[1]])
+                f"VALUES({courseStudent[0]!r}, {courseStud!r}, {randGrade!r});\n"])
+                writer.writerow([courseStudent[0], courseStud, randGrade])
+        f.write("\n")
 
         writer = csv.writer(cl)
         writer.writerow(header[4])
+        counter = 0
         for courseLecturer in courseLecturers:
             for course in courseLecturer[0]:
                 f.writelines([f"INSERT INTO `{tableNames[4]}` ",
@@ -198,4 +206,4 @@ try:
                 counter += 1
     f.close()
 except Exception as e:
-    print(str(e))
+    logger.exception(str(e))

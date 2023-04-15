@@ -1,0 +1,6 @@
+STUDENTS WITH OVER 5 COURSES:
+SELECT COUNT(`Student ID`)
+FROM `course students`
+GROUP BY `Student ID`
+HAVING COUNT(`Student ID`) > 5
+
