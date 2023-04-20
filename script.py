@@ -36,15 +36,17 @@ def generateUser(type, id):
     'Birthday': birthday,
     'Password': password}
 
-tableNames = ["Courses", 
-            "Students", 
-            "Lecturers",
-            "Course Students",
-            "Course Lecturers"]
+tableNames = ["courses", 
+            "admins",
+            "students", 
+            "lecturers",
+            "course students",
+            "course lecturers"]
             
 database = "comp3161_final_project"
 
 header = [["Course ID", "Course Name"], 
+        ["Admin ID", "First Name", "Last Name", "Email", "Age", "Birthday", "Password"],
         ["Student ID", "First Name", "Last Name", "Email", "Age", "Birthday", "Password"], 
         ["Lecturer ID", "First Name", "Last Name", "Email", "Age", "Birthday", "Password"],
         ["Course ID", "Student ID", "Grade"],
@@ -54,16 +56,16 @@ levels = ["Fundamentals in ", "Novice ", "Intermediate ", "Advanced ", "Expert "
 courseSubjects = ["Python", "Javascript", "C#", "Java", "C", "C++", "PHP", "Kotlin", "R", "HTML", "CSS", "Swift", "GO", "Ruby", "Pascal", "Dart", "Pascal", "Rust", "Cobol", "Calculus", "Calculus", "Electronic Circuit Analysis", "Statistics", "Chemistry", "Biology", "Physics", "Information Technology", "Calculus 2", "Electronics", "Physical Education", "Health and Nutrition", "Home and Family Life Education", "Civics", "Carpentry", "Welding", "Telecommunications", "Machinery", "Web DEvelopement", "Database Management", "Discrete Mathematics"]
 
 courses = [[x[0] + y[0:1] + str(n), x+y] for x in levels for n, y in enumerate(courseSubjects)]
-courseStudents = []    
-        
+admins = []
+lecturers = []
+courseStudents = [] 
+courseLecturers = []
+
 for count, course in enumerate(courses):
     tempLst = []
     for studCount in range(count*10, count*10+10):
         tempLst += ["S" + str(studCount)]
     courseStudents.append([course[0], tempLst])
-
-lecturers = []
-courseLecturers = []
 
 for n in range(1, 6):
     for y in range(2):
@@ -72,87 +74,28 @@ for n in range(1, 6):
             courseLecturers.append([["CourseID"]*n, lecturers[-1]["ID Number"]])
 for n in range(10):
     lecturers.append(generateUser("L", len(lecturers)))
-    courseLecturers.append([["CourseID"]*5, lecturers[-1]["ID Number"]])
 
-counter = 0
+    admins.append(generateUser("A", len(admins)))
+    admins.append(generateUser("A", len(admins)))
 
-# count = 0
-# for n in courseLecturers:
-#     count += n[1].count("CourseID")
-# print(count)
+    courseLecturers.append([["CourseID"]*5, lecturers[-1]["ID Number"]])    
 
-# def factorize(a, b, n):
-#     return n/a, (n%a)/b, (n%a)%b
-
-# def factorize_min(a, b, n):
-#     na1, nb1, r1 = factorize(a, b, n)
-#     nb2, na2, r2 = factorize(b, a, n)
-#     return (na1, nb1) if r1 < r2 else (na2, nb2)
-
-# def factorize_min_list(a, b, n):
-#     na, nb = factorize_min(a, b, n)
-#     na = int(na)
-#     nb = int(nb)
-#     return [a]*na + [b]*nb
-
-try:
-    f = open("script.sql", "w+")
-    f.writelines([f"DROP DATABASE IF EXISTS {database};\n", 
-    f"CREATE DATABASE {database};\n",
-    f"USE {database};\n\n"])
-
-    f.writelines([f"DROP TABLE IF EXISTS {tableNames[0]};\n",
-        f"CREATE TABLE {tableNames[0]}(\n",
-        f"  `{header[0][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
-        f"  `{header[0][1]}` VARCHAR(255)\n"
-        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
-
-    f.writelines([f"DROP TABLE IF EXISTS {tableNames[1]};\n",
-        f"CREATE TABLE {tableNames[1]}(\n",
-        f"  `{header[1][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
-        f"  `{header[1][1]}` VARCHAR(255),\n",
-        f"  `{header[1][2]}` VARCHAR(255),\n",
-        f"  {header[1][3]} VARCHAR(255),\n",
-        f"  {header[1][4]} INTEGER,\n",
-        f"  {header[1][5]} DATE,\n",
-        f"  {header[1][6]} VARCHAR(255)\n"
-        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
-    
+def createStudentsFile(f):
     f.writelines([f"DROP TABLE IF EXISTS {tableNames[2]};\n",
-        f"CREATE TABLE {tableNames[2]}(\n",
-        f"  `{header[2][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
-        f"  `{header[2][1]}` VARCHAR(255),\n",
-        f"  `{header[2][2]}` VARCHAR(255),\n",
-        f"  {header[2][3]} VARCHAR(255),\n",
-        f"  {header[2][4]} INTEGER,\n",
-        f"  {header[2][5]} DATE,\n",
-        f"  {header[2][6]} VARCHAR(255)\n"
-        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
+    f"CREATE TABLE {tableNames[2]}(\n",
+    f"  `{header[2][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
+    f"  `{header[2][1]}` VARCHAR(255),\n",
+    f"  `{header[2][2]}` VARCHAR(255),\n",
+    f"  {header[2][3]} VARCHAR(255),\n",
+    f"  {header[2][4]} INTEGER,\n",
+    f"  {header[2][5]} DATE,\n",
+    f"  {header[2][6]} VARCHAR(255)\n"
+    ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
 
-    f.writelines([f"DROP TABLE IF EXISTS `{tableNames[3]}`;\n",
-        f"CREATE TABLE `{tableNames[3]}`(\n",
-        f"  `{header[3][0]}` VARCHAR(255),\n",
-        f"  `{header[3][1]}` VARCHAR(255),\n",
-        f"  {header[3][2]} INTEGER\n"
-        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
-    
-    f.writelines([f"DROP TABLE IF EXISTS `{tableNames[4]}`;\n",
-        f"CREATE TABLE `{tableNames[4]}`(\n",
-        f"  `{header[4][0]}` VARCHAR(255),\n",
-        f"  `{header[4][1]}` VARCHAR(255)\n"
-        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])    
-
-    with open('courses.csv', 'w+', encoding = 'UTF8', newline = '') as c, open('students.csv', 'w+', encoding = 'UTF8', newline = '') as s, open('lecturers.csv', 'w+', encoding = 'UTF8', newline = '') as l, open('Courses_Students.csv', 'w+', encoding = 'UTF8', newline = '') as cs, open('Courses_Lecturer.csv', 'w+', encoding = 'UTF8', newline = '') as cl:
-        writer = csv.writer(c)
-        writer.writerow(header[0])
-        for course in courses:
-            writer.writerow(course)
-            f.writelines([f"INSERT INTO {tableNames[0]} ",
-            f"VALUES({course[0]!r}, {course[1]!r});\n"])
-        f.write("\n")
-
+    with open('students.csv', 'w+', encoding = 'UTF8', newline = '') as s:
         writer = csv.writer(s)
-        writer.writerow(header[1])
+        writer.writerow(header[2])
+        f.write("LOCK TABLES `students` WRITE;\n")
         for n in range(100000): #Change to appropriate value
             student = generateUser("S", n)
             writer.writerow([student['ID Number'], student['First Name'], student['Last Name'], student['Email'], student['Age'], student['Birthday'], student['Password']])
@@ -172,38 +115,137 @@ try:
                         randCourse = random.randint(0,199)
                     courseStudents[randCourse][1] += [student['ID Number']]
 
-            f.writelines([f"INSERT INTO {tableNames[1]} ",
-            f"VALUES({student['ID Number']!r}, {student['First Name']!r}, {student['Last Name']!r}, {student['Email']!r}, {student['Age']!r}, {student['Birthday']!r}, {student['Password']!r});\n"])
-        f.write("\n")
-
-        writer = csv.writer(l)
-        writer.writerow(header[2])
-        for lecturer in lecturers:
-            writer.writerow([lecturer['ID Number'], lecturer['First Name'], lecturer['Last Name'], lecturer['Email'], lecturer['Age'], lecturer['Birthday'], lecturer['Password']])
-
             f.writelines([f"INSERT INTO {tableNames[2]} ",
-            f"VALUES({lecturer['ID Number']!r}, {lecturer['First Name']!r}, {lecturer['Last Name']!r}, {lecturer['Email']!r}, {lecturer['Age']!r}, {lecturer['Birthday']!r}, {lecturer['Password']!r});\n"])
-        f.write("\n")            
+            f"VALUES({student['ID Number']!r}, {student['First Name']!r}, {student['Last Name']!r}, {student['Email']!r}, {student['Age']!r}, {student['Birthday']!r}, {student['Password']!r});\n"])
+        f.write("UNLOCK TABLES;\n\n")
 
+def createCoursesFile(f):
+    f.writelines([f"DROP TABLE IF EXISTS {tableNames[0]};\n",
+        f"CREATE TABLE {tableNames[0]}(\n",
+        f"  `{header[0][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
+        f"  `{header[0][1]}` VARCHAR(255)\n"
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
+
+    with open('courses.csv', 'w+', encoding = 'UTF8', newline = '') as c:
+        writer = csv.writer(c)
+        writer.writerow(header[0])
+        f.write("LOCK TABLES `courses` WRITE;\n")
+        for course in courses:
+            writer.writerow(course)
+            f.writelines([f"INSERT INTO {tableNames[0]} ",
+            f"VALUES({course[0]!r}, {course[1]!r});\n"])
+        f.write("UNLOCK TABLES;\n\n")
+
+def createAdminsFile(f):
+    f.writelines([f"DROP TABLE IF EXISTS {tableNames[1]};\n",
+        f"CREATE TABLE {tableNames[1]}(\n",
+        f"  `{header[1][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
+        f"  `{header[1][1]}` VARCHAR(255),\n",
+        f"  `{header[1][2]}` VARCHAR(255),\n",
+        f"  {header[1][3]} VARCHAR(255),\n",
+        f"  {header[1][4]} INTEGER,\n",
+        f"  {header[1][5]} DATE,\n",
+        f"  {header[1][6]} VARCHAR(255)\n"
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
+
+    with open('admins.csv', 'w+', encoding = 'UTF8', newline = '') as a:
+        writer = csv.writer(a)
+        writer.writerow(header[1])
+        f.write("LOCK TABLES `admins` WRITE;\n")
+        for admin in admins:
+            writer.writerow([admin['ID Number'], admin['First Name'], admin['Last Name'], admin['Email'], admin['Age'], admin['Birthday'], admin['Password']])
+
+            f.writelines([f"INSERT INTO {tableNames[1]} ",
+            f"VALUES({admin['ID Number']!r}, {admin['First Name']!r}, {admin['Last Name']!r}, {admin['Email']!r}, {admin['Age']!r}, {admin['Birthday']!r}, {admin['Password']!r});\n"])
+        f.write("UNLOCK TABLES;\n\n")
+
+def createCourseStudentsFile(f):
+    f.writelines([f"DROP TABLE IF EXISTS `{tableNames[4]}`;\n",
+        f"CREATE TABLE `{tableNames[4]}`(\n",
+        f"  `{header[4][0]}` VARCHAR(255),\n",
+        f"  `{header[4][1]}` VARCHAR(255),\n",
+        f"  {header[4][2]} INTEGER\n"
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
+
+    with open('Courses_Students.csv', 'w+', encoding = 'UTF8', newline = '') as cs:
         writer = csv.writer(cs)
-        writer.writerow(header[3])
+        writer.writerow(header[4])
+        f.write("LOCK TABLES `course students` WRITE;\n")
         for courseStudent in courseStudents:
             for courseStud in courseStudent[1]:
                 randGrade = random.randint(0,100)
-                f.writelines([f"INSERT INTO `{tableNames[3]}` ",
+                f.writelines([f"INSERT INTO `{tableNames[4]}` ",
                 f"VALUES({courseStudent[0]!r}, {courseStud!r}, {randGrade!r});\n"])
                 writer.writerow([courseStudent[0], courseStud, randGrade])
-        f.write("\n")
+        f.write("UNLOCK TABLES;\n\n")
 
+def createCourseLecturersFile(f):
+    f.writelines([f"DROP TABLE IF EXISTS `{tableNames[5]}`;\n",
+        f"CREATE TABLE `{tableNames[5]}`(\n",
+        f"  `{header[5][0]}` VARCHAR(255),\n",
+        f"  `{header[5][1]}` VARCHAR(255)\n"
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])    
+
+    with open('Courses_Lecturer.csv', 'w+', encoding = 'UTF8', newline = '') as cl:
         writer = csv.writer(cl)
-        writer.writerow(header[4])
+        writer.writerow(header[5])
         counter = 0
+        f.write("LOCK TABLES `course lecturers` WRITE;\n")
         for courseLecturer in courseLecturers:
             for course in courseLecturer[0]:
-                f.writelines([f"INSERT INTO `{tableNames[4]}` ",
+                f.writelines([f"INSERT INTO `{tableNames[5]}` ",
                 f"VALUES({courseLecturer[1]!r}, {courses[counter][0]!r});\n"])
                 writer.writerow([courseLecturer[1], courses[counter][0]])
-                counter += 1
+                counter += 1    
+        f.write("UNLOCK TABLES;\n\n")
+
+def createLecturersFile(f):
+    f.writelines([f"DROP TABLE IF EXISTS {tableNames[3]};\n",
+        f"CREATE TABLE {tableNames[3]}(\n",
+        f"  `{header[3][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
+        f"  `{header[3][1]}` VARCHAR(255),\n",
+        f"  `{header[3][2]}` VARCHAR(255),\n",
+        f"  {header[3][3]} VARCHAR(255),\n",
+        f"  {header[3][4]} INTEGER,\n",
+        f"  {header[3][5]} DATE,\n",
+        f"  {header[3][6]} VARCHAR(255)\n"
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"]) 
+
+    with open('lecturers.csv', 'w+', encoding = 'UTF8', newline = '') as l:
+        writer = csv.writer(l)
+        writer.writerow(header[3])
+        for lecturer in lecturers:
+            writer.writerow([lecturer['ID Number'], lecturer['First Name'], lecturer['Last Name'], lecturer['Email'], lecturer['Age'], lecturer['Birthday'], lecturer['Password']])
+
+            f.writelines([f"INSERT INTO {tableNames[3]} ",
+            f"VALUES({lecturer['ID Number']!r}, {lecturer['First Name']!r}, {lecturer['Last Name']!r}, {lecturer['Email']!r}, {lecturer['Age']!r}, {lecturer['Birthday']!r}, {lecturer['Password']!r});\n"])
+        f.write("\n\n")      
+
+functionDict = {
+    'a': createAdminsFile,
+    's': createStudentsFile,
+    'c': createCoursesFile,
+    'l': createLecturersFile,
+    'cl': createCourseLecturersFile,
+    'cs': createCourseStudentsFile}
+
+def createFiles(lst):
+    if lst == ["All"]:
+        f = open("script.sql", "w+")
+        f.writelines([f"DROP DATABASE IF EXISTS {database};\n", 
+        f"CREATE DATABASE {database};\n",
+        f"USE {database};\n\n"])  
+        for key, val in functionDict.items():
+            val(f)
+    else:
+        f = open("script.sql", "a")
+        for func in lst:
+            if func in functionDict:
+                functionDict[func](f)
+            
     f.close()
+
+try:
+    createFiles(["All"])
 except Exception as e:
     logger.exception(str(e))
