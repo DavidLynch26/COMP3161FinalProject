@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<header>
-    {% block head %}{% endblock %}
-</header>
 <body>
+    <header>
+        {% include 'header.html' %}
+    </header>
     <main>
-        {% block main %}{% endblock %}
+        {% block main %}
+        {% endblock main %}
     </main>
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
 </body>
-<footer>
-    {% block foot %}{% endblock %}
-</footer>
 </html>
