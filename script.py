@@ -41,7 +41,9 @@ tableNames = ["courses",
             "students", 
             "lecturers",
             "course students",
-            "course lecturers"]
+            "course lecturers",
+            "course assignments",
+            "course calenders"]
             
 database = "comp3161_final_project"
 
@@ -50,7 +52,9 @@ header = [["Course ID", "Course Name"],
         ["Student ID", "First Name", "Last Name", "Email", "Age", "Birthday", "Password"], 
         ["Lecturer ID", "First Name", "Last Name", "Email", "Age", "Birthday", "Password"],
         ["Course ID", "Student ID", "Grade"],
-        ["Lecturer ID", "Course ID"]]
+        ["Lecturer ID", "Course ID"],
+        ["Assignment ID", "Course ID"],
+        ["Calender ID", "Course ID"]]
 
 levels = ["Fundamentals in ", "Novice ", "Intermediate ", "Advanced ", "Expert "]
 courseSubjects = ["Python", "Javascript", "C#", "Java", "C", "C++", "PHP", "Kotlin", "R", "HTML", "CSS", "Swift", "GO", "Ruby", "Pascal", "Dart", "Pascal", "Rust", "Cobol", "Calculus", "Calculus", "Electronic Circuit Analysis", "Statistics", "Chemistry", "Biology", "Physics", "Information Technology", "Calculus 2", "Electronics", "Physical Education", "Health and Nutrition", "Home and Family Life Education", "Civics", "Carpentry", "Welding", "Telecommunications", "Machinery", "Web Developement", "Database Management", "Discrete Mathematics"]
@@ -221,7 +225,23 @@ def createLecturersFile(f):
             f"VALUES({lecturer['ID Number']!r}, {lecturer['First Name']!r}, {lecturer['Last Name']!r}, {lecturer['Email']!r}, {lecturer['Age']!r}, {lecturer['Birthday']!r}, {lecturer['Password']!r});\n"])
         f.write("\n\n")      
 
+def createCourseAssignments(f):
+    f.writelines([f"DROP TABLE IF EXISTS `{tableNames[6]}`;\n",
+        f"CREATE TABLE `{tableNames[6]}`(\n",
+        f"  `{header[6][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
+        f"  `{header[6][1]}` VARCHAR(255)\n"
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])     
+
+def createCourseCalenders(f):
+    f.writelines([f"DROP TABLE IF EXISTS `{tableNames[7]}`;\n",
+        f"CREATE TABLE `{tableNames[7]}`(\n",
+        f"  `{header[7][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
+        f"  `{header[7][1]}` VARCHAR(255)\n"
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])   
+
 functionDict = {
+    'cc': createCourseCalenders,
+    'ca': createCourseAssignments,
     'a': createAdminsFile,
     's': createStudentsFile,
     'c': createCoursesFile,
@@ -241,11 +261,10 @@ def createFiles(lst):
         f = open("script.sql", "a")
         for func in lst:
             if func in functionDict:
-                functionDict[func](f)
-            
+                functionDict[func](f)     
     f.close()
 
 try:
-    createFiles(["All"])
+    createFiles(["ca", "cc"])
 except Exception as e:
     logger.exception(str(e))

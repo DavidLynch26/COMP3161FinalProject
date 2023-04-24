@@ -3,7 +3,7 @@
     <ul>
         {% if session.get('logged_in') == True: %}
             {% for course in session['courses'] %}
-            <li>{{course[1].split(":")[1].strip()[1:-1]}}</li>
+            <a href="{{ url_for('coursePage', course_id = course[0].split(':')[1].strip()[1:-1], course_name = course[1].split(':')[1].strip()[1:-1])}}"><li>{{course[1].split(":")[1].strip()[1:-1]}}</li></a>
             {% endfor %}
             {% else %}
                 {% for course in courses %}

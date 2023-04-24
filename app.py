@@ -197,5 +197,11 @@ def landingPage():
     else:
         return redirect(url_for("loginPage"))
 
+@app.route(f'/{sN}/course/<course_id>&<course_name>')
+def coursePage(course_id, course_name):
+    print(course_id + course_name, file=sys.stderr)
+    return render_template("coursePage.html", course_name = course_name, course_id = course_id)
+    # return redirect(f'/{sN}/coursePage', 302)
+
 if __name__ == 'main':
     app.run()
