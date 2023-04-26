@@ -1,3 +1,27 @@
 <h2>
     {{course_name}}
 </h2>
+<h3>
+    Calender Events
+    {% if calender == [] %}
+        <p>There is no thing to see here</p>
+    {% else %}
+    <ul>
+        {% for event in calender: %}      
+            <li></li>
+        {% endfor %}  
+    </ul>
+    {% endif %}
+</h3>
+<h3>
+    Assignments
+    {% if assignments == [] %} 
+        <p>There is no thing to see here</p>
+    {% else %}
+    <ul>
+        {% for assignment in assignments: %}   
+            <li>assignment</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</h3>

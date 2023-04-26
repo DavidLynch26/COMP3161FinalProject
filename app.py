@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import json
 import string
 import mysql.connector
 import random2 as random
@@ -33,6 +34,44 @@ def connectToDB():
     cursor = conn.cursor()
 
     return conn, cursor
+
+@app.route('/Calender/<course_id>')
+def calender(course_id):
+    try:
+        query = f"SELECT Name, Type, Description FROM `Course Calenders` WHERE `Course Calenders`.`Course ID` = {course_id!r}"
+        conn, cursor = connectToDB()
+        calenderLst = []
+        cursor.execute(query)
+        for calName, calType, calDescip in cursor:
+            calender = {} 
+            calender['Name'] = calName
+            calender['Type'] = calType
+            calender['Description'] = calDescip
+            calenderLst.append(calender)
+        conn.close()
+        cursor.close()
+        return make_response(calenderLst, 200)
+    except Exception as e:
+        return make_response(str(e), 400)
+
+@app.route('/Assignment/<course_id>')
+def assignments(course_id):
+    try:
+        query = f"SELECT Name, Type, Description FROM `Course Assignments` WHERE `Course Assignments`.`Course ID` = {course_id!r}"
+        conn, cursor = connectToDB()
+        assignmentLst = []
+        cursor.execute(query)
+        for assName, assType, assDescip in cursor:
+            assignment = {} 
+            assignment['Name'] = assName
+            assignment['Type'] = assType
+            assignment['Description'] = assDescip
+            assignmentLst.append(assignment)
+        conn.close()
+        cursor.close()
+        return make_response(assignmentLst, 200)
+    except Exception as e:
+        return make_response(str(e), 400)
 
 @app.route('/Courses', methods = ['GET'])
 def courses():
@@ -92,10 +131,13 @@ def courseByLecturer(lecturer_id):
 @app.route('/login/<user_id>&<user_password>', methods = ['POST'])
 def login(user_id, user_password):
     try:
+        print(user_id+ user_password, file=sys.stderr)
         if(user_id[0] == "S"):
             query = f"SELECT * FROM Students WHERE `Student ID` = {user_id!r} AND Password = {user_password!r}"
-        else:
+        elif(user_id[0] == "L"):
             query = f"SELECT * FROM Lecturers WHERE `Lecturer ID` = {user_id!r} AND Password = {user_password!r}"
+        else:
+            query = f"SELECT * FROM Admins WHERE `Admin ID` = {user_id!r} AND Password = {user_password!r}"
         conn, cursor = connectToDB()
         loginStatus = ""
         cursor.execute(query)
@@ -112,7 +154,7 @@ def login(user_id, user_password):
                 student['Birthday'] = birthday
                 student['Password'] = password
                 loginStatus = f"{firstName} {lastName} {studentID}"
-            else:
+            elif(user_id[0] == "L"):
                 lecturerID, firstName, lastName, email, age, birthday, password = row
                 lecturer = {}
                 lecturer['Lecturer ID'] = lecturerID
@@ -123,6 +165,17 @@ def login(user_id, user_password):
                 lecturer['Birthday'] = birthday
                 lecturer['Password'] = password
                 loginStatus = f"{firstName} {lastName} {lecturerID}"
+            else:
+                adminID, firstName, lastName, email, age, birthday, password = row
+                admin = {}
+                admin['Admin ID'] = adminID
+                admin['First Name'] = firstName
+                admin['Last Name'] = lastName
+                admin['Email'] = email
+                admin['Age'] = age
+                admin['Birthday'] = birthday
+                admin['Password'] = password
+                loginStatus = f"{firstName} {lastName} {adminID}"                
             return make_response(loginStatus, 200)
         else:
             return make_response("User not found", 200)
@@ -132,23 +185,26 @@ def login(user_id, user_password):
 def toList(func):
     word = func().data
     word = str(word, 'utf-8')
-    word = word.replace("},", "}!").replace("\n", "")
+    word = " ".join(word.split()).strip("[]").replace('" ', '"').replace(' "', '"')
 
-    word = word.split("!")
-    word = [l for l in word if l != ","]
-    for index, item in enumerate(word):
+    tmpLst = []
+    temp = ""
 
-        word[index] = item.split(",")
-        word[index][0] = word[index][0][4:]
-        word[index][1] = word[index][1][:-3]    
-    return word
+    for index, let in enumerate(word):
+        if let == "{":
+            temp = let
+        elif let == "," and word[index-1] == "}":
+            tmpLst.append(json.loads(temp))
+        elif let != "{" or let != "}":
+            temp += let
+    return tmpLst
 
 @app.route(f'/{sN}/home')
 def homePage():
     if session.get('logged_in') == True:
-        if session['type'] == "Student":
-            studentCourses = toList(lambda: courseByStudent(session['id']))
-            return render_template("home.html")
+    # if session['type'] == "Student":
+    #     studentCourses = toList(lambda: courseByStudent(session['id']))
+        return render_template("home.html")
         # elif session['type'] == "Lecturer":
     else:
         session['user'] = "Guest"
@@ -176,11 +232,25 @@ def loginPage():
                 print(loginStatus, file=sys.stderr)
                 session.modified = True
                 return redirect(url_for("homePage"))
-            # return render_template("home.html", )
-        # return redirect("home.html", user = )
-    # print(loginStatus, file=sys.stderr)
-    # if form.validate_on_submit():
-    #     return "asd"
+            elif loginStatus[2][0] == "L":
+                LecturerCourses = toList(lambda: courseByLecturer(loginStatus[2]))
+                session['courses'] = LecturerCourses
+                session['user'] = loginStatus[0] + " " +loginStatus[1]
+                session['logged_in'] = True
+                session['type'] = "Lecturer"
+                session['id'] = loginStatus[2]
+                session.modified = True
+                return redirect(url_for("homePage"))                
+            else:
+                adminCourses = toList(lambda: courses())
+                session['courses'] = adminCourses
+                session['user'] = loginStatus[0] + " " +loginStatus[1]
+                session['logged_in'] = True
+                session['type'] = "Admin"
+                session['id'] = loginStatus[2]
+                print(loginStatus, file=sys.stderr)
+                session.modified = True
+                return redirect(url_for("homePage"))
     else:
         return render_template("login.html", form = form, message = "")
 
@@ -200,7 +270,9 @@ def landingPage():
 @app.route(f'/{sN}/course/<course_id>&<course_name>')
 def coursePage(course_id, course_name):
     print(course_id + course_name, file=sys.stderr)
-    return render_template("coursePage.html", course_name = course_name, course_id = course_id)
+    courseCalenders = toList(lambda: calender(course_id))
+    courseAssignments = toList(lambda: assignments(course_id))
+    return render_template("coursePage.html", course_name = course_name, calender = courseCalenders, assignments = courseAssignments)
     # return redirect(f'/{sN}/coursePage', 302)
 
 if __name__ == 'main':

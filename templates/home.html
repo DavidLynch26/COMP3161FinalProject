@@ -3,11 +3,11 @@
     <ul>
         {% if session.get('logged_in') == True: %}
             {% for course in session['courses'] %}
-            <a href="{{ url_for('coursePage', course_id = course[0].split(':')[1].strip()[1:-1], course_name = course[1].split(':')[1].strip()[1:-1])}}"><li>{{course[1].split(":")[1].strip()[1:-1]}}</li></a>
+            <a href="{{ url_for('coursePage', course_id = course['Course ID'], course_name = course['Course Name']) }}"><li>{{ course['Course Name'] }}</li></a>
             {% endfor %}
             {% else %}
                 {% for course in courses %}
-                <li>{{course[1].split(":")[1].strip()[1:-1]}}</li>
+                <li>{{ course['Course Name'] }}</li>
                 {% endfor %} 
             {% endif %}
     </ul>

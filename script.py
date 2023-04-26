@@ -53,8 +53,8 @@ header = [["Course ID", "Course Name"],
         ["Lecturer ID", "First Name", "Last Name", "Email", "Age", "Birthday", "Password"],
         ["Course ID", "Student ID", "Grade"],
         ["Lecturer ID", "Course ID"],
-        ["Assignment ID", "Course ID"],
-        ["Calender ID", "Course ID"]]
+        ["Assignment ID", "Name", "Type", "Description", "Course ID"],
+        ["Calender ID", "Name", "Type", "Description", "Course ID"]]
 
 levels = ["Fundamentals in ", "Novice ", "Intermediate ", "Advanced ", "Expert "]
 courseSubjects = ["Python", "Javascript", "C#", "Java", "C", "C++", "PHP", "Kotlin", "R", "HTML", "CSS", "Swift", "GO", "Ruby", "Pascal", "Dart", "Pascal", "Rust", "Cobol", "Calculus", "Calculus", "Electronic Circuit Analysis", "Statistics", "Chemistry", "Biology", "Physics", "Information Technology", "Calculus 2", "Electronics", "Physical Education", "Health and Nutrition", "Home and Family Life Education", "Civics", "Carpentry", "Welding", "Telecommunications", "Machinery", "Web Developement", "Database Management", "Discrete Mathematics"]
@@ -229,14 +229,20 @@ def createCourseAssignments(f):
     f.writelines([f"DROP TABLE IF EXISTS `{tableNames[6]}`;\n",
         f"CREATE TABLE `{tableNames[6]}`(\n",
         f"  `{header[6][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
-        f"  `{header[6][1]}` VARCHAR(255)\n"
+        f"  {header[6][1]} VARCHAR(255),\n",
+        f"  {header[6][2]} VARCHAR(255),\n",
+        f"  {header[6][3]} VARCHAR(255),\n",
+        f"  `{header[6][4]}` VARCHAR(255)\n"
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])     
 
 def createCourseCalenders(f):
     f.writelines([f"DROP TABLE IF EXISTS `{tableNames[7]}`;\n",
         f"CREATE TABLE `{tableNames[7]}`(\n",
         f"  `{header[7][0]}` VARCHAR(255) NOT NULL PRIMARY KEY,\n",
-        f"  `{header[7][1]}` VARCHAR(255)\n"
+        f"  {header[7][1]} VARCHAR(255),\n",
+        f"  {header[7][2]} VARCHAR(255),\n",
+        f"  {header[7][3]} VARCHAR(255),\n",
+        f"  `{header[7][4]}` VARCHAR(255)\n"
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])   
 
 functionDict = {
