@@ -1,5 +1,11 @@
 body header{
-    color: #FFFFFF;  
-    background-color:darkred; 
-    padding: 1px;
+    color: #FFFFFF; 
+    background-color: darkred;
+    padding: 15px;
+}
+
+body footer{
+    color: #FFFFFF;
+    background-color: darkred;
+    padding: 8px;
 }
