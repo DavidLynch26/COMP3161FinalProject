@@ -1,27 +1,30 @@
-<h2>
-    {{course_name}}
-</h2>
-<h3>
-    Calender Events
-    {% if calender == [] %}
-        <p>There is no thing to see here</p>
-    {% else %}
-    <ul>
-        {% for event in calender: %}   
-            <li><a href="{{ url_for('calenderPage', event = event) }}">{{ event['Name'] }}</a></li>
-        {% endfor %}  
-    </ul>
-    {% endif %}
-</h3>
-<h3>
-    Assignments
-    {% if assignments == [] %} 
-        <p>There is no thing to see here</p>
-    {% else %}
-    <ul>
-        {% for assignment in assignments: %}   
-        <li><a href="{{ url_for('assingmentPage', assignment = assignment) }}">{{ assignment['Name'] }}</a></li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-</h3>
+{% extends 'base.html' %}
+{% block main %}
+    <h2>
+        {{course_name}}
+    </h2>
+    <h3>
+        Calender Events
+        {% if calender == [] %}
+            <p>There is no thing to see here</p>
+        {% else %}
+        <ul>
+            {% for event in calender: %}   
+                <li><a href="{{ url_for('calenderPage', event = event) }}">{{ event['Name'] }}</a></li>
+            {% endfor %}  
+        </ul>
+        {% endif %}
+    </h3>
+    <h3>
+        Assignments
+        {% if assignments == [] %} 
+            <p>There is no thing to see here</p>
+        {% else %}
+        <ul>
+            {% for assignment in assignments: %}   
+            <li><a href="{{ url_for('assingmentPage', assignment = assignment) }}">{{ assignment['Name'] }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </h3>
+{% endblock main %}

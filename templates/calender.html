@@ -1,4 +1,7 @@
-<h2>{{ event['Name'] }}</h2>
-<h3>{{ event['Type'] }}</h3>
-<p>{{ event['Description'] }}</p>
-<p>{{ event['Date'] }}</p>
+{% extends 'base.html' %}
+{% block main %}    
+    <h2>{{ event['Name'] }}</h2>
+    <h3>{{ event['Type'] }}</h3>
+    <p>{{ event['Description'] }}</p>
+    <p>{{ event['Date'] }}</p>
+{% endblock main %}
