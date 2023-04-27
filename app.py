@@ -9,7 +9,7 @@ from forms import LoginForm
 from datetime import timedelta
 from flask import Flask, request, make_response, render_template, redirect, session, url_for
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder = 'templates', static_folder = 'static')
 
 # SECRET_KEY = os.urandom(32)
 # app.secret_key = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(random.randint(8, 16))])
