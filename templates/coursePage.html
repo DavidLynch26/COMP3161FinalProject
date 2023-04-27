@@ -4,7 +4,7 @@
         {{course_name}}
     </h2>
     <h3>
-        Calender Events
+        Calender Events {% if session['type'] !=  "Student": %} <button onclick = "url_for()">Add Event</button> {% endif %}
         {% if calender == [] %}
             <p>There is no thing to see here</p>
         {% else %}
@@ -16,7 +16,7 @@
         {% endif %}
     </h3>
     <h3>
-        Assignments
+        Assignments {% if session['type'] !=  "Student": %} <button onclick = "url_for()">Add Assignment</button> {% endif %}
         {% if assignments == [] %} 
             <p>There is no thing to see here</p>
         {% else %}
