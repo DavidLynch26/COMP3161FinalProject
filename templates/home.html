@@ -3,7 +3,7 @@
     <ul>
         {% if session.get('logged_in') == True: %}
             {% for course in courses %}
-            <a href="{{ url_for('coursePage', course_id = course['Course ID'], course_name = course['Course Name']) }}"><li>{{ course['Course Name'] }}</li></a>
+            <li><a href="{{ url_for('coursePage', course_id = course['Course ID'], course_name = course['Course Name']) }}">{{ course['Course Name'] }}</a></li>
             {% endfor %}
         {% else %}
                 {% for course in courses %}

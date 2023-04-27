@@ -1,8 +1,8 @@
 <hr>
 <p>
     {% if session.get('logged_in') == True: %}
-        You are logged in as {{session['user']}} <a href="{{url_for('logout')}}">Log Out</a>
+        You are logged in as {{session['user']}} <a href="{{ url_for('logout') }}">Log Out</a>
         {% else %}
-        You are logged in as guest <a href="{{url_for('loginPage')}}">Login</a>
+        You are logged in as guest <a href="{{ url_for('loginPage') }}">Login</a>
     {% endif %}
 </p>

@@ -197,13 +197,17 @@ def toList(func):
             temp += let
     return tmpLst
 
-@app.route(f'/{sN}/course/<calender>')
-def calenderPage(calender):
-    return render_template("calender.html", calender = calender)
+@app.route(f'/{sN}/course/<event>')
+def calenderPage(event):
+    event = event.replace("'", '"')
+    event = json.loads(event)
+    return render_template("calender.html", event = event)
 
 @app.route(f'/{sN}/assignment/<assignment>')
 def assingmentPage(assignment):
-    return render_template("assignment.html", assignment = calender)
+    assignment = assignment.replace("'", '"')
+    assignment = json.loads(assignment)
+    return render_template("assignment.html", assignment = assignment)
 
 @app.route(f'/{sN}/home')
 def homePage():

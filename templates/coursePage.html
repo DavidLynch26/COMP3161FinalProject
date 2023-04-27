@@ -7,8 +7,8 @@
         <p>There is no thing to see here</p>
     {% else %}
     <ul>
-        {% for event in calender: %}      
-            <a href="{{url_for('calenderPage', calender = calender)}}"><li>{{ event['Name'] }}</li></a>
+        {% for event in calender: %}   
+            <li><a href="{{ url_for('calenderPage', event = event) }}">{{ event['Name'] }}</a></li>
         {% endfor %}  
     </ul>
     {% endif %}
@@ -20,7 +20,7 @@
     {% else %}
     <ul>
         {% for assignment in assignments: %}   
-            <a href="{{url_for('assingmentPage', assignment = assignment)}}"><li>{{ assignment['Name'] }}</li></a>
+        <li><a href="{{ url_for('assingmentPage', assignment = assignment) }}">{{ assignment['Name'] }}</a></li>
         {% endfor %}
     </ul>
     {% endif %}
