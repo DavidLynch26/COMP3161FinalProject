@@ -15,6 +15,6 @@ class EventForm(FlaskForm):
 class AssignmentForm(FlaskForm):
     assignmentName = StringField('Assignment Name', validators=[InputRequired()])
     assignmentType = StringField('Assignment Type', validators=[InputRequired()])
-    assignmentDesciption = StringField('Assignment Description', validators=[InputRequired()])
+    assignmentDescription = StringField('Assignment Description', validators=[InputRequired()])
     assignmentStartDate = DateField('Start Date', format = '%d/%m/%Y', validators=[InputRequired()])
-    assignmentEndDate = DateField('End Date', format = '%d/%m/%Y', validators=[InputRequired()])
+    assignmentDueDate = DateField('Due Date', format = '%d/%m/%Y', validators=[InputRequired()])

@@ -202,6 +202,11 @@ def addEventPage(course_id):
     form = EventForm()
     return render_template("addEvent.html", form = form, course_id = course_id)
 
+@app.route(f'/{sN}/course/addAssignment/<course_id>')
+def addAssignmentPage(course_id):
+    form = AssignmentForm()
+    return render_template("addAssignment.html", form = form, course_id = course_id)
+
 @app.route(f'/{sN}/course/<event>')
 def calenderPage(event):
     event = event.replace("'", '"')
