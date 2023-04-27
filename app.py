@@ -5,7 +5,7 @@ import json
 import string
 import mysql.connector
 import random2 as random
-from forms import LoginForm
+from forms import LoginForm, AssignmentForm, EventForm
 from datetime import timedelta
 from flask import Flask, request, make_response, render_template, redirect, session, url_for
 
@@ -197,6 +197,11 @@ def toList(func):
             temp += let
     return tmpLst
 
+@app.route(f'/{sN}/course/addEvent/<course_id>')
+def addEventPage(course_id):
+    form = EventForm()
+    return render_template("addEvent.html", form = form, course_id = course_id)
+
 @app.route(f'/{sN}/course/<event>')
 def calenderPage(event):
     event = event.replace("'", '"')
@@ -277,7 +282,7 @@ def coursePage(course_id, course_name):
     courseCalenders = toList(lambda: calender(course_id))
     courseAssignments = toList(lambda: assignments(course_id))
     print(courseAssignments, courseCalenders)
-    return render_template("coursePage.html", course_name = course_name, calender = courseCalenders, assignments = courseAssignments)
+    return render_template("coursePage.html", course_id = course_id, course_name = course_name, calender = courseCalenders, assignments = courseAssignments)
 
 if __name__ == 'main':
     app.run()
