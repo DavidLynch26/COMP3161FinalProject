@@ -2,13 +2,13 @@
 {% block main %}
     <ul>
         {% if session.get('logged_in') == True: %}
-            {% for course in session['courses'] %}
+            {% for course in courses %}
             <a href="{{ url_for('coursePage', course_id = course['Course ID'], course_name = course['Course Name']) }}"><li>{{ course['Course Name'] }}</li></a>
             {% endfor %}
-            {% else %}
+        {% else %}
                 {% for course in courses %}
                 <li>{{ course['Course Name'] }}</li>
                 {% endfor %} 
-            {% endif %}
+        {% endif %}
     </ul>
 {% endblock main %}

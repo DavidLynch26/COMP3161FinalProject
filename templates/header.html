@@ -2,7 +2,7 @@
     <h1>MyVLE</h1>
     <nav>
         <ul>
-            <li><a href ="{{ url_for('homePage')}}">Home</a></li>
+            <a href ="{{ url_for('homePage')}}"><li>Home</li></a>
         </ul>
     </nav>
     {% if session.get('logged_in') == True: %}

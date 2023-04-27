@@ -8,7 +8,7 @@
     {% else %}
     <ul>
         {% for event in calender: %}      
-            <li></li>
+            <a href="{{url_for('calenderPage', calender = calender)}}"><li>{{ event['Name'] }}</li></a>
         {% endfor %}  
     </ul>
     {% endif %}
@@ -20,7 +20,7 @@
     {% else %}
     <ul>
         {% for assignment in assignments: %}   
-            <li>assignment</li>
+            <a href="{{url_for('assingmentPage', assignment = assignment)}}"><li>{{ assignment['Name'] }}</li></a>
         {% endfor %}
     </ul>
     {% endif %}
