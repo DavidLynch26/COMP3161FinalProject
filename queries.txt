@@ -4,7 +4,10 @@ FROM `course students`
 GROUP BY `Student ID`
 HAVING COUNT(`Student ID`) > 5
 
-
+host = "localhost"
+username = "COMP3161Group"
+password = "tJ58FIU!uuV/3HS8"
+database = "comp3161_final_project"
 
 <!-- <li><a href ="#{{ url_for('courses')}}">Courses</a></li> -->
 <!-- <li><a href ="#{{ url_for('faculty')}}">Faculty</a></li>   -->

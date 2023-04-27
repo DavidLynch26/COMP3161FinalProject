@@ -126,12 +126,10 @@ def courseByLecturer(lecturer_id):
         return make_response(courseLst, 200)
     except Exception as e:
         return str(e)
-        print(str(e))
 
 @app.route('/login/<user_id>&<user_password>', methods = ['POST'])
 def login(user_id, user_password):
     try:
-        print(user_id+ user_password, file=sys.stderr)
         if(user_id[0] == "S"):
             query = f"SELECT * FROM Students WHERE `Student ID` = {user_id!r} AND Password = {user_password!r}"
         elif(user_id[0] == "L"):
@@ -186,30 +184,35 @@ def toList(func):
     word = func().data
     word = str(word, 'utf-8')
     word = " ".join(word.split()).strip("[]").replace('" ', '"').replace(' "', '"')
-
+    
     tmpLst = []
     temp = ""
 
     for index, let in enumerate(word):
         if let == "{":
             temp = let
-        elif let == "," and word[index-1] == "}":
+        elif ((let == "," and word[index-1] == "}") or len(word)-1 == index):
             tmpLst.append(json.loads(temp))
         elif let != "{" or let != "}":
             temp += let
     return tmpLst
 
+@app.route(f'/{sN}/course/<calender>')
+def calenderPage(calender):
+    return render_template("calender.html", calender = calender)
+
+@app.route(f'/{sN}/assignment/<assignment>')
+def assingmentPage(assignment):
+    return render_template("assignment.html", assignment = calender)
+
 @app.route(f'/{sN}/home')
 def homePage():
     if session.get('logged_in') == True:
-    # if session['type'] == "Student":
-    #     studentCourses = toList(lambda: courseByStudent(session['id']))
-        return render_template("home.html")
-        # elif session['type'] == "Lecturer":
+        return render_template("home.html", courses = session['courses'])
     else:
         session['user'] = "Guest"
-        allCourses = toList(lambda: courses())
-        return render_template("home.html", courses = allCourses)
+        session['courses'] = toList(lambda: courses())
+        return render_template("home.html", courses = session['courses'])
 
 @app.route(f'/{sN}/login', methods = ['GET', 'POST'])
 def loginPage():
@@ -229,7 +232,6 @@ def loginPage():
                 session['logged_in'] = True
                 session['type'] = "Student"
                 session['id'] = loginStatus[2]
-                print(loginStatus, file=sys.stderr)
                 session.modified = True
                 return redirect(url_for("homePage"))
             elif loginStatus[2][0] == "L":
@@ -248,7 +250,6 @@ def loginPage():
                 session['logged_in'] = True
                 session['type'] = "Admin"
                 session['id'] = loginStatus[2]
-                print(loginStatus, file=sys.stderr)
                 session.modified = True
                 return redirect(url_for("homePage"))
     else:
@@ -269,11 +270,10 @@ def landingPage():
 
 @app.route(f'/{sN}/course/<course_id>&<course_name>')
 def coursePage(course_id, course_name):
-    print(course_id + course_name, file=sys.stderr)
     courseCalenders = toList(lambda: calender(course_id))
     courseAssignments = toList(lambda: assignments(course_id))
+    print(courseAssignments, courseCalenders)
     return render_template("coursePage.html", course_name = course_name, calender = courseCalenders, assignments = courseAssignments)
-    # return redirect(f'/{sN}/coursePage', 302)
 
 if __name__ == 'main':
     app.run()
