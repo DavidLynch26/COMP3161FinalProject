@@ -7,7 +7,7 @@ HAVING COUNT(`Student ID`) > 5
 host = "localhost"
 username = "COMP3161Group"
 password = "tJ58FIU!uuV/3HS8"
-database = "comp3161_final_project"
+database = "comp3161_final_sproject"
 
 <!-- <li><a href ="#{{ url_for('courses')}}">Courses</a></li> -->
 <!-- <li><a href ="#{{ url_for('faculty')}}">Faculty</a></li>   -->
@@ -18,3 +18,4 @@ print(loginStatus, file=sys.stderr)
 Admin = A0, Nh451RzWb
 Lecturer = L0, DyjtHMDtQEk
 Student = S0, Dj0abr5h1np8ive
+S81, Krxc6Duj5NeYM
