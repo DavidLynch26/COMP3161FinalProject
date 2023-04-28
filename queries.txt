@@ -21,3 +21,5 @@ Student = S0, Dj0abr5h1np8ive
 S81, Krxc6Duj5NeYM
 
 <input type="date" name="date" id="date"> 
+
+<h1>Add {{session['type']}}</h1>

@@ -35,7 +35,7 @@ def connectToDB():
 
     return conn, cursor
 
-@app.route('/Event/<course_id>')
+@app.route('/Event/<course_id>', methods = ['GET'])
 def event(course_id):
     try:
         query = f"SELECT `Calender ID`, Name, Type, Description, Date, (SELECT `Course Name` FROM courses WHERE `Course ID` = {course_id!r}) FROM `Course Calenders` WHERE `Course Calenders`.`Course ID` = {course_id!r}"
@@ -57,7 +57,7 @@ def event(course_id):
     except Exception as e:
         return make_response(str(e), 400)
 
-@app.route('/Assignment/<course_id>')
+@app.route('/Assignment/<course_id>', methods = ['GET'])
 def assignments(course_id):
     try:
         query = f"SELECT `Assignment ID`, Name, Type, Description, `Start Date`, `End Date`, (SELECT `Course Name` FROM courses WHERE `Course ID` = {course_id!r}) FROM `Course Assignments` WHERE `Course Assignments`.`Course ID` = {course_id!r}"
@@ -187,7 +187,7 @@ def login(user_id, user_password):
     except Exception as e:
         return make_response(str(e), 400)
 
-@app.route('/Course/addEvent/<course_id>')
+@app.route('/Course/addEvent/<course_id>', methods = ['GET'])
 def addEvent(course_id):
     try:
         query = "SELECT COUNT(`Calender ID`) FROM `Course Calenders`"
@@ -208,7 +208,7 @@ def addEvent(course_id):
     except Exception as e:
         return(str(e))
 
-@app.route('/Course/addAssignment/<course_id>')
+@app.route('/Course/addAssignment/<course_id>', methods = ['GET'])
 def addAssignment(course_id):
     try:
         query = "SELECT COUNT(`Assignment ID`) FROM `Course Assignments`"
@@ -248,37 +248,39 @@ def toList(func):
             temp += let
     return tmpLst
 
-@app.route(f'/{sN}/course/addEvent/<course_id>')
+@app.route(f'/{sN}/course/addEvent/<course_id>', methods = ['GET', 'POST'])
 def addEventPage(course_id):
     form = EventForm()
     if form.validate_on_submit():
+        # return "ASD"
+        print("asd")
         eventName = request.form['eventName']
         eventType = request.form['eventType']
         eventDescription = request.form['eventDescription']
         eventDate = request.form['eventDate']
         result = request.form.to_dict(flat=False)
-        # print(result)
-
+        print(result, "sd")
+        return "ASD"
     return render_template("addEvent.html", form = form, course_id = course_id)
 
-@app.route(f'/{sN}/course/addAssignment/<course_id>')
+@app.route(f'/{sN}/course/addAssignment/<course_id>', methods = ['GET', 'POST'])
 def addAssignmentPage(course_id):
     form = AssignmentForm()
     return render_template("addAssignment.html", form = form, course_id = course_id)
 
-@app.route(f'/{sN}/course/<event>')
+@app.route(f'/{sN}/course/<event>', methods = ['GET'])
 def calenderPage(event):
     event = event.replace("'", '"')
     event = json.loads(event)
     return render_template("calender.html", event = event)
 
-@app.route(f'/{sN}/assignment/<assignment>')
-def assingmentPage(assignment):
+@app.route(f'/{sN}/assignment/<assignment>', methods = ['GET'])
+def assignmentPage(assignment):
     assignment = assignment.replace("'", '"')
     assignment = json.loads(assignment)
     return render_template("assignment.html", assignment = assignment)
 
-@app.route(f'/{sN}/home')
+@app.route(f'/{sN}/home', methods = ['GET'])
 def homePage():
     if session.get('logged_in') == True:
         return render_template("home.html", courses = session['courses'])
@@ -328,20 +330,20 @@ def loginPage():
     else:
         return render_template("login.html", form = form, message = "")
 
-@app.route(f'/{sN}/logout')
+@app.route(f'/{sN}/logout', methods = ['GET'])
 def logout():
     session.clear()
     app.config['SECRET_KEY'] = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(random.randint(8, 16))])
     return redirect(url_for('landingPage'))
 
-@app.route(f'/{sN}')
+@app.route(f'/{sN}', methods = ['GET'])
 def landingPage():
     if session.get('logged_in') == True:
         return render_template("home.html", courses = session['courses'])
     else:
         return redirect(url_for("loginPage"))
 
-@app.route(f'/{sN}/course/<course_id>&<course_name>')
+@app.route(f'/{sN}/course/<course_id>&<course_name>', methods = ['GET'])
 def coursePage(course_id, course_name):
     courseCalenders = toList(lambda: event(course_id))
     courseAssignments = toList(lambda: assignments(course_id))

@@ -18,3 +18,5 @@ class AssignmentForm(FlaskForm):
     assignmentDescription = StringField('Assignment Description', validators=[InputRequired()])
     assignmentStartDate = DateField('Start Date', format = '%d/%m/%Y', validators=[InputRequired()])
     assignmentDueDate = DateField('Due Date', format = '%d/%m/%Y', validators=[InputRequired()])
+
+# class AddUser(FlaskForm):
