@@ -48,7 +48,7 @@ def event(course_id):
             event['Name'] = eventName
             event['Type'] = eventType
             event['Description'] = eventDescription
-            event['Event Date'] = eventDate
+            event['Date'] = eventDate
             event['Course Name'] = courseName
             eventLst.append(event)
         conn.close()
@@ -252,22 +252,50 @@ def toList(func):
 def addEventPage(course_id):
     form = EventForm()
     if form.validate_on_submit():
-        # return "ASD"
-        print("asd")
-        eventName = request.form['eventName']
-        eventType = request.form['eventType']
-        eventDescription = request.form['eventDescription']
-        eventDate = request.form['eventDate']
-        result = request.form.to_dict(flat=False)
-        print(result, "sd")
-        return "ASD"
+        try:
+            query = "SELECT COUNT(`Calender ID`) FROM `Course Calenders`"
+            conn, cursor = connectToDB()
+            eventName = request.form['eventName']
+            eventType = request.form['eventType']
+            eventDescription = request.form['eventDescription']
+            eventDate = request.form['eventDate']
+            cursor.execute(query)
+            rowCount = cursor.fetchone()[0]
+            query = f"INSERT INTO `Course Calenders` VALUES('CE{rowCount}', {eventName!r}, {eventType!r}, {eventDescription!r}, {eventDate!r}, {course_id!r})"
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            cursor.close()
+            return render_template("addEvent.html", form = form, message = "Calender Event Added")
+        except Exception as e:
+            return(str(e))      
     return render_template("addEvent.html", form = form, course_id = course_id)
 
 @app.route(f'/{sN}/course/addAssignment/<course_id>', methods = ['GET', 'POST'])
 def addAssignmentPage(course_id):
     form = AssignmentForm()
+    if form.validate_on_submit():
+        try:
+            print("asd")
+            query = "SELECT COUNT(`Assignment ID`) FROM `Course Assignments`"
+            conn, cursor = connectToDB()
+            assignmentName = request.form['assignmentName']
+            assignmentType = request.form['assignmentType']
+            assignmentDescription = request.form['assignmentDescription']
+            assignmentStartDate = request.form['assignmentStartDate']
+            assignmentDueDate = request.form['assignmentDueDate']
+            cursor.execute(query)
+            rowCount = cursor.fetchone()[0]
+            query = f"INSERT INTO `Course Assignments` VALUES('CA{rowCount}', {assignmentName!r}, {assignmentType!r}, {assignmentDescription!r}, {assignmentStartDate!r}, {assignmentDueDate!r}, {course_id!r})"
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            cursor.close()
+            return render_template("addAssignment.html", form = form, message = "Assignment Added")
+        except Exception as e:
+            return(str(e))
     return render_template("addAssignment.html", form = form, course_id = course_id)
-
+#IMPLEMENTATION NEEDED
 @app.route(f'/{sN}/course/<event>', methods = ['GET'])
 def calenderPage(event):
     event = event.replace("'", '"')
@@ -347,7 +375,6 @@ def landingPage():
 def coursePage(course_id, course_name):
     courseCalenders = toList(lambda: event(course_id))
     courseAssignments = toList(lambda: assignments(course_id))
-    print(courseAssignments, courseCalenders)
     return render_template("coursePage.html", course_id = course_id, course_name = course_name, calender = courseCalenders, assignments = courseAssignments)
 
 if __name__ == 'main':
