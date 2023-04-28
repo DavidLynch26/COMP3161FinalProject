@@ -22,7 +22,7 @@
         {% else %}
         <ul>
             {% for assignment in assignments: %}   
-            <li><a href="{{ url_for('assingmentPage', assignment = assignment) }}">{{ assignment['Name'] }}</a></li>
+            <li><a href="{{ url_for('assignmentPage', assignment = assignment) }}">{{ assignment['Name'] }}</a></li>
             {% endfor %}
         </ul>
         {% endif %}

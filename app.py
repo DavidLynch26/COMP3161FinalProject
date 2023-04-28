@@ -35,37 +35,44 @@ def connectToDB():
 
     return conn, cursor
 
-@app.route('/Calender/<course_id>')
-def calender(course_id):
+@app.route('/Event/<course_id>')
+def event(course_id):
     try:
-        query = f"SELECT Name, Type, Description FROM `Course Calenders` WHERE `Course Calenders`.`Course ID` = {course_id!r}"
+        query = f"SELECT `Calender ID`, Name, Type, Description, Date, (SELECT `Course Name` FROM courses WHERE `Course ID` = {course_id!r}) FROM `Course Calenders` WHERE `Course Calenders`.`Course ID` = {course_id!r}"
         conn, cursor = connectToDB()
-        calenderLst = []
+        eventLst = []
         cursor.execute(query)
-        for calName, calType, calDescip in cursor:
-            calender = {} 
-            calender['Name'] = calName
-            calender['Type'] = calType
-            calender['Description'] = calDescip
-            calenderLst.append(calender)
+        for eventID, eventName, eventType, eventDescription, eventDate, courseName in cursor:
+            event = {} 
+            event['Event ID'] = eventID
+            event['Name'] = eventName
+            event['Type'] = eventType
+            event['Description'] = eventDescription
+            event['Event Date'] = eventDate
+            event['Course Name'] = courseName
+            eventLst.append(event)
         conn.close()
         cursor.close()
-        return make_response(calenderLst, 200)
+        return make_response(eventLst, 200)
     except Exception as e:
         return make_response(str(e), 400)
 
 @app.route('/Assignment/<course_id>')
 def assignments(course_id):
     try:
-        query = f"SELECT Name, Type, Description FROM `Course Assignments` WHERE `Course Assignments`.`Course ID` = {course_id!r}"
+        query = f"SELECT `Assignment ID`, Name, Type, Description, `Start Date`, `End Date`, (SELECT `Course Name` FROM courses WHERE `Course ID` = {course_id!r}) FROM `Course Assignments` WHERE `Course Assignments`.`Course ID` = {course_id!r}"
         conn, cursor = connectToDB()
         assignmentLst = []
         cursor.execute(query)
-        for assName, assType, assDescip in cursor:
+        for assID, assName, assType, assDescip, start, end, courseName in cursor:
             assignment = {} 
+            assignment['Assignment ID'] = assID
             assignment['Name'] = assName
             assignment['Type'] = assType
+            assignment['Start Date'] = start
+            assignment['End Date'] = end
             assignment['Description'] = assDescip
+            assignment['Course Name'] = courseName
             assignmentLst.append(assignment)
         conn.close()
         cursor.close()
@@ -127,7 +134,7 @@ def courseByLecturer(lecturer_id):
     except Exception as e:
         return str(e)
 
-@app.route('/login/<user_id>&<user_password>', methods = ['POST'])
+@app.route('/Login/<user_id>&<user_password>', methods = ['POST'])
 def login(user_id, user_password):
     try:
         if(user_id[0] == "S"):
@@ -180,6 +187,50 @@ def login(user_id, user_password):
     except Exception as e:
         return make_response(str(e), 400)
 
+@app.route('/Course/addEvent/<course_id>')
+def addEvent(course_id):
+    try:
+        query = "SELECT COUNT(`Calender ID`) FROM `Course Calenders`"
+        conn, cursor = connectToDB()
+        content = request.json
+        eventName = content['Event Name']
+        eventType = content['Event Type']
+        eventDate = content['Event Date']
+        eventDescription = content['Event Description']
+        cursor.execute(query)
+        rowCount = cursor.fetchone()[0]
+        query = f"INSERT INTO `Course Calenders` VALUES('CE{rowCount}', {eventName!r}, {eventType!r}, {eventDescription!r}, {eventDate!r}, {course_id!r})"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        cursor.close()
+        return make_response({'Success': 'Calender Event Added'}, 200)
+    except Exception as e:
+        return(str(e))
+
+@app.route('/Course/addAssignment/<course_id>')
+def addAssignment(course_id):
+    try:
+        query = "SELECT COUNT(`Assignment ID`) FROM `Course Assignments`"
+        conn, cursor = connectToDB()
+        content = request.json
+        assignmentName = content['Assignment Name']
+        assignmentType = content['Assignment Type']
+        assignmentDescription = content['Assignment Description']
+        assignmentStartDate = content['Assignment Start Date']
+        assignmentDueDate = content['Assignment Due Date']
+        cursor.execute(query)
+        rowCount = cursor.fetchone()[0]
+        query = f"INSERT INTO `Course Assignments` VALUES('CA{rowCount}', {assignmentName!r}, {assignmentType!r}, {assignmentDescription!r}, {assignmentStartDate!r}, {assignmentDueDate!r}, {course_id!r})"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        cursor.close()
+        return make_response({'Success': 'Assignment Added'}, 200)
+    except Exception as e:
+        return(str(e))
+    # return render_template("addEvent.html", form = form, course_id = course_id)
+
 def toList(func):
     word = func().data
     word = str(word, 'utf-8')
@@ -200,6 +251,14 @@ def toList(func):
 @app.route(f'/{sN}/course/addEvent/<course_id>')
 def addEventPage(course_id):
     form = EventForm()
+    if form.validate_on_submit():
+        eventName = request.form['eventName']
+        eventType = request.form['eventType']
+        eventDescription = request.form['eventDescription']
+        eventDate = request.form['eventDate']
+        result = request.form.to_dict(flat=False)
+        # print(result)
+
     return render_template("addEvent.html", form = form, course_id = course_id)
 
 @app.route(f'/{sN}/course/addAssignment/<course_id>')
@@ -284,7 +343,7 @@ def landingPage():
 
 @app.route(f'/{sN}/course/<course_id>&<course_name>')
 def coursePage(course_id, course_name):
-    courseCalenders = toList(lambda: calender(course_id))
+    courseCalenders = toList(lambda: event(course_id))
     courseAssignments = toList(lambda: assignments(course_id))
     print(courseAssignments, courseCalenders)
     return render_template("coursePage.html", course_id = course_id, course_name = course_name, calender = courseCalenders, assignments = courseAssignments)
