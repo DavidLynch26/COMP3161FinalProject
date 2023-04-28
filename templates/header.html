@@ -3,6 +3,7 @@
     <nav>
         <ul>
             <li><a href ="{{ url_for('homePage')}}">Home</a></li>
+            {% if session['type'] == "Admin": %}<li><a href ="{{ url_for('addUser')}}">Users</a></li>{% endif %}
         </ul>
     </nav>
     {% if session.get('logged_in') == True: %}

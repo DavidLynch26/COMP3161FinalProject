@@ -248,6 +248,10 @@ def toList(func):
             temp += let
     return tmpLst
 
+@app.route(f'/{sN}/user')
+def addUser():
+    return "asd"
+
 @app.route(f'/{sN}/course/addEvent/<course_id>', methods = ['GET', 'POST'])
 def addEventPage(course_id):
     form = EventForm()
@@ -295,7 +299,7 @@ def addAssignmentPage(course_id):
         except Exception as e:
             return(str(e))
     return render_template("addAssignment.html", form = form, course_id = course_id)
-#IMPLEMENTATION NEEDED
+
 @app.route(f'/{sN}/course/<event>', methods = ['GET'])
 def calenderPage(event):
     event = event.replace("'", '"')
