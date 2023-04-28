@@ -32,3 +32,15 @@ S81, Krxc6Duj5NeYM
         {{ form.lecturerOption.label }}
         {{ form.lecturerOption(class='form-control', placeholder="Enter your Course") }}
       </div>
+
+            {% if form.userChoice.get == "Student": %}
+        {% for course in courses: %}
+          <input type="checkbox" id = "courseChoice">
+          <label for="courseChoice">{{course['Course ID']}} {{course['Course Name']}}</label>
+        {% endfor %}
+        {{ form.catagoties.label }}
+        {{ form.catagoties(class='form-control', placeholder="Enter your description") }}
+      {% elif session['type'] == "Lecturer": %}
+        {{ form.lecturerChoice.label }}
+        {{ form.lecturerChoice(class='form-control', placeholder="Enter your description") }}
+      {%endif%}

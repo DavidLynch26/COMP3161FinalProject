@@ -71,7 +71,7 @@ def event(course_id):
         cursor.close()
         return make_response(eventLst, 200)
     except Exception as e:
-        return return make_response({"Failed": str(e)}, 400)
+        return make_response({"Failed": str(e)}, 400)
 
 @app.route('/Assignment/<course_id>', methods = ['GET'])
 def assignments(course_id):
@@ -264,7 +264,7 @@ def toList(func):
             temp += let
     return tmpLst
 
-@app.route(f'/{sN}/user')
+@app.route(f'/{sN}/user', methods = ['GET', 'POST'])
 def addUser():
     form = AddUser()
     if form.validate_on_submit():
@@ -275,9 +275,26 @@ def addUser():
             email = request.form['email']
             birthday = request.form['birthday']
             password = request.form['password']
+            userChoice = request.form['userChoice']
+            # if userChoice == "Admin":
+
+            return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: courses()))
         except Exception as e:
-            return (str(e))
+            return make_response({"Failed": str(e)}, 400)
+    # select = request.form.get('userChoice')
     return render_template("addUser.html", form = form)
+
+@app.route(f'/{sN}/addCourse', methods = ['GET', 'POST'])
+def addCourse():
+    return render_template("addCourse.html")
+
+@app.route(f'/{sN}/user/selectCourse/<firstName>&<lastName>&<email>&<birthday>&<password>&<userChoice>&<courses>', methods = ['GET', 'POST'])
+def selectCourse(firstName, lastName, email, birthday, password, userChoice, courses):
+    if request.form.validate_on_submit():
+        print("asdasd")
+    # else:
+
+    return render_template("selectCourse.html", userChoice = userChoice)
 
 @app.route(f'/{sN}/course/addEvent/<course_id>', methods = ['GET', 'POST'])
 def addEventPage(course_id):

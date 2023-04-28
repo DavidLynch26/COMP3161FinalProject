@@ -4,6 +4,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/style.css" type = "text/css">
+    <script>
+        function checkBoxLimit() {
+            var checkBoxGroup = document.forms['Select Course Form']['Selected Course'];			
+            var limit = 6;
+            for (var i = 0; i < checkBoxGroup.length; i++) {
+                checkBoxGroup[i].onclick = function() {
+                    var checkedcount = 0;
+                    for (var i = 0; i < checkBoxGroup.length; i++) {
+                        checkedcount += (checkBoxGroup[i].checked) ? 1 : 0;
+                    }
+                    if (checkedcount > limit) {
+                        alert("You can select maximum of " + limit + " Courses.");						
+                        this.checked = false;
+                    }
+                }
+            }
+        }
+        function checkBoxLimit5() {
+            var checkBoxGroup = document.forms['Select Course Form']['Selected Course'];			
+            var limit = 5;
+            for (var i = 0; i < checkBoxGroup.length; i++) {
+                checkBoxGroup[i].onclick = function() {
+                    var checkedcount = 0;
+                    for (var i = 0; i < checkBoxGroup.length; i++) {
+                        checkedcount += (checkBoxGroup[i].checked) ? 1 : 0;
+                    }
+                    if (checkedcount > limit) {
+                        alert("You can select maximum of " + limit + " Courses.");						
+                        this.checked = false;
+                    }
+                }
+            }
+        }
+    </script>
     <title>MyVLE</title>
 </head>
 <body>
