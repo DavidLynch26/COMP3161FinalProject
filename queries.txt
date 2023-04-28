@@ -23,3 +23,12 @@ S81, Krxc6Duj5NeYM
 <input type="date" name="date" id="date"> 
 
 <h1>Add {{session['type']}}</h1>
+
+<div class="form-group">
+        {{ form.studentOption.label }}
+        {{ form.studentOption(class='form-control', placeholder="Enter your Course") }}
+      </div>
+      <div class="form-group">
+        {{ form.lecturerOption.label }}
+        {{ form.lecturerOption(class='form-control', placeholder="Enter your Course") }}
+      </div>

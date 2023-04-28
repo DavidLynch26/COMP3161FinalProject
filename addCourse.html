@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block main %}
+<div class="addAssignment center-block">
+    <h2>Add Course</h2>
+    <form action="" method="post">
+      {{ form.csrf_token }}
+      <div class="form-group">
+        {{ form.courseName.label }}
+        {{ form.courseName(class='form-control', placeholder="Enter your Course") }}
+      </div>
+      
+      <button type="submit" name="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+    <p>{{message}}</p>
+  </div>
+{% endblock main %}    
