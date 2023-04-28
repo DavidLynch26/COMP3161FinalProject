@@ -2,7 +2,7 @@ from app import users
 import email_validator
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, DataRequired
-from wtforms import StringField, PasswordField, DateField, validators, SelectMultipleField
+from wtforms import StringField, PasswordField, DateField, validators, SelectMultipleField, SelectField
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
@@ -28,3 +28,9 @@ class AddUser(FlaskForm):
     birthday = DateField('Birthday', format = '%Y-%m-%d')
     password = StringField('Password', validators=[InputRequired()])
     # categories = MultiCheckboxField('Categories',choices=[('news', 'News'), ('tutorial', 'Tutorial'), ('reviews', 'Reviews'), ('recommendations', 'Recommendations')
+
+class AddCourse(FlaskForm):
+    courseName = StringField('Course Name', validators=[InputRequired()])    
+     #categories = MultiCheckboxField('Categories',choices=[('news', 'News'), ('tutorial', 'Tutorial'), ('reviews', 'Reviews'), ('recommendations', 'Recommendations')
+     #categories = MultiCheckboxField('Categories',choices=[('news', 'News'), ('tutorial', 'Tutorial'), ('reviews', 'Reviews'), ('recommendations', 'Recommendations')
+     #categories = SelectField('Categories', choices=[('house', 'House'), ('apartment', 'Apartment')])
