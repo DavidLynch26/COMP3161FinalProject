@@ -1,8 +1,41 @@
 {% extends 'base.html' %}
 {% block main %}
-<h2></h2>
-    <ul>
-        {% if  %}
-        {% endif %}
-    </ul>
+<div class="addAssignment center-block">
+    <h2>Add {{session['type']}}</h2>
+    <form action="" method="post">    
+      {{ form.csrf_token }}
+      <div class="form-group">
+        {{ form.firstName.label }}
+        {{ form.firstName(class='form-control', placeholder="Enter your Assignment") }}
+      </div>
+      <div class="form-group">
+        {{ form.lastName.label }}
+        {{ form.lastName(class='form-control', placeholder="") }}
+      </div>
+      <div class="form-group">
+        {{ form.email.label }}
+        {{ form.email(class='form-control', placeholder="") }}        
+      </div>
+      <div class="form-group">
+        {{ form.birthday.label }}
+        {{ form.birthday(class='form-control', placeholder="") }}
+      </div>
+      <div class="form-group">
+        {{ form.password.label }}
+        {{ form.password(class='form-control', placeholder="Enter your description") }}
+      </div>
+      <div>
+      {% if session['type'] == "Student": %}
+      {{ form.studentChoice.label }}
+      {{ form.studentChoice(class='form-control', placeholder="Enter your description") }}
+      {% elif session['type'] == "Lecturer": %}
+      {{ form.lecturerChoice.label }}
+      {{ form.lecturerChoice(class='form-control', placeholder="Enter your description") }}
+      {%endif%}
+      </div>
+      <button type="submit" name="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+    <p>{{message}}</p>
+  </div>
+   
 {% endblock main %}    
