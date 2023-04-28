@@ -26,11 +26,11 @@
       </div>
       <div>
       {% if session['type'] == "Student": %}
-      {{ form.studentChoice.label }}
-      {{ form.studentChoice(class='form-control', placeholder="Enter your description") }}
+        {{ form.studentChoice.label }}
+        {{ form.studentChoice(class='form-control', placeholder="Enter your description") }}
       {% elif session['type'] == "Lecturer": %}
-      {{ form.lecturerChoice.label }}
-      {{ form.lecturerChoice(class='form-control', placeholder="Enter your description") }}
+        {{ form.lecturerChoice.label }}
+        {{ form.lecturerChoice(class='form-control', placeholder="Enter your description") }}
       {%endif%}
       </div>
       <button type="submit" name="submit" class="btn btn-primary btn-block">Submit</button>

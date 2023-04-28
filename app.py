@@ -5,8 +5,8 @@ import json
 import string
 import mysql.connector
 import random2 as random
-from forms import LoginForm, AssignmentForm, EventForm
 from datetime import timedelta
+from forms import LoginForm, AssignmentForm, EventForm, AddUser
 from flask import Flask, request, make_response, render_template, redirect, session, url_for
 
 app = Flask(__name__, template_folder = 'templates', static_folder = 'static')
@@ -35,6 +35,22 @@ def connectToDB():
 
     return conn, cursor
 
+@app.route('/users/<type>')
+def users(type):
+    try:
+        conn, cursor = connectToDB()
+        if type == "Student":
+            query = "SELECT `course students`.`Student ID`, students.`First Name`, students.`Last Name` "
+            query += "FROM `course students` INNER JOIN students ON `course students`.`Student ID` = students.`Student ID` "
+            query += "GROUP BY `course students`.`Student ID` HAVING COUNT(`course students`.`Student ID`) > 5"
+            cursor.execute(query)
+        elif type == "Lecturer":
+
+            cursor.execute(query)
+        return 
+    except Exception as e:
+        return make_response({"Failed": str(e)}, 400)
+
 @app.route('/Event/<course_id>', methods = ['GET'])
 def event(course_id):
     try:
@@ -55,7 +71,7 @@ def event(course_id):
         cursor.close()
         return make_response(eventLst, 200)
     except Exception as e:
-        return make_response(str(e), 400)
+        return return make_response({"Failed": str(e)}, 400)
 
 @app.route('/Assignment/<course_id>', methods = ['GET'])
 def assignments(course_id):
@@ -78,7 +94,7 @@ def assignments(course_id):
         cursor.close()
         return make_response(assignmentLst, 200)
     except Exception as e:
-        return make_response(str(e), 400)
+        return make_response({"Failed": str(e)}, 400)
 
 @app.route('/Courses', methods = ['GET'])
 def courses():
@@ -96,7 +112,7 @@ def courses():
         cursor.close()
         return make_response(courseLst, 200)
     except Exception as e:
-        return make_response(str(e), 400)
+        return make_response({"Failed": str(e)}, 400)
 
 @app.route('/CoursesByStudent/<student_id>', methods = ['GET'])
 def courseByStudent(student_id):
@@ -114,7 +130,7 @@ def courseByStudent(student_id):
         cursor.close()
         return make_response(courseLst, 200)
     except Exception as e:
-        return make_response(str(e), 400)
+        return make_response({"Failed": str(e)}, 400)
 
 @app.route('/CoursesByLecturer/<lecturer_id>', methods = ['GET'])
 def courseByLecturer(lecturer_id):
@@ -132,7 +148,7 @@ def courseByLecturer(lecturer_id):
         cursor.close()
         return make_response(courseLst, 200)
     except Exception as e:
-        return str(e)
+        return make_response({"Failed": str(e)}, 400)
 
 @app.route('/Login/<user_id>&<user_password>', methods = ['POST'])
 def login(user_id, user_password):
@@ -183,9 +199,9 @@ def login(user_id, user_password):
                 loginStatus = f"{firstName} {lastName} {adminID}"                
             return make_response(loginStatus, 200)
         else:
-            return make_response("User not found", 200)
+            return make_response({"Failed": "User not found"}, 200)
     except Exception as e:
-        return make_response(str(e), 400)
+        return make_response({"Failed": str(e)}, 400)
 
 @app.route('/Course/addEvent/<course_id>', methods = ['GET'])
 def addEvent(course_id):
@@ -206,7 +222,7 @@ def addEvent(course_id):
         cursor.close()
         return make_response({'Success': 'Calender Event Added'}, 200)
     except Exception as e:
-        return(str(e))
+        return make_response({"Failed": str(e)}, 400)
 
 @app.route('/Course/addAssignment/<course_id>', methods = ['GET'])
 def addAssignment(course_id):
@@ -228,7 +244,7 @@ def addAssignment(course_id):
         cursor.close()
         return make_response({'Success': 'Assignment Added'}, 200)
     except Exception as e:
-        return(str(e))
+        return make_response({"Failed": str(e)}, 400)
     # return render_template("addEvent.html", form = form, course_id = course_id)
 
 def toList(func):
@@ -250,7 +266,18 @@ def toList(func):
 
 @app.route(f'/{sN}/user')
 def addUser():
-    return "asd"
+    form = AddUser()
+    if form.validate_on_submit():
+        try:
+            conn, cursor = connectToDB()
+            firstName = request.form['firstName']
+            lastName = request.form['lastName']
+            email = request.form['email']
+            birthday = request.form['birthday']
+            password = request.form['password']
+        except Exception as e:
+            return (str(e))
+    return render_template("addUser.html", form = form)
 
 @app.route(f'/{sN}/course/addEvent/<course_id>', methods = ['GET', 'POST'])
 def addEventPage(course_id):
@@ -297,7 +324,7 @@ def addAssignmentPage(course_id):
             cursor.close()
             return render_template("addAssignment.html", form = form, message = "Assignment Added")
         except Exception as e:
-            return(str(e))
+            return make_response({"Failed": str(e)}, 400)
     return render_template("addAssignment.html", form = form, course_id = course_id)
 
 @app.route(f'/{sN}/course/<event>', methods = ['GET'])

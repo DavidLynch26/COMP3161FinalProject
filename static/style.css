@@ -10,10 +10,11 @@ body footer{
     padding: 8px;
 }
 
-body header a{
+body header a,body footer a {
+    font-weight: bold;
     color: #ffffff;
 }
 
-body header a.hover{
+body header a:hover, body footer a:hover{
     color:#0000ff;
 }
