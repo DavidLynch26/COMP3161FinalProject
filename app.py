@@ -276,12 +276,11 @@ def addUser():
             birthday = request.form['birthday']
             password = request.form['password']
             userChoice = request.form['userChoice']
+            print(userChoice)
             # if userChoice == "Admin":
-
             return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: courses()))
         except Exception as e:
             return make_response({"Failed": str(e)}, 400)
-    # select = request.form.get('userChoice')
     return render_template("addUser.html", form = form)
 
 @app.route(f'/{sN}/addCourse', methods = ['GET', 'POST'])
@@ -290,8 +289,16 @@ def addCourse():
 
 @app.route(f'/{sN}/user/selectCourse/<firstName>&<lastName>&<email>&<birthday>&<password>&<userChoice>&<courses>', methods = ['GET', 'POST'])
 def selectCourse(firstName, lastName, email, birthday, password, userChoice, courses):
-    if request.form.validate_on_submit():
-        print("asdasd")
+    
+    print("asdasd")
+    # if request.form.validate_on_submit():
+        # if userChoice == "Lecturer":
+
+        # elif userChoice == "Student":
+
+        # else:
+
+        # query = "INSERT INTO"
     # else:
 
     return render_template("selectCourse.html", userChoice = userChoice)
