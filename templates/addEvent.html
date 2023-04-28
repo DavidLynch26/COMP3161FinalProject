@@ -10,15 +10,15 @@
       </div>
       <div class="form-group">
         {{ form.eventDescription.label }}
-        {{ form.eventDescription(class='form-control') }}
+        {{ form.eventDescription(class='form-control' placeholder="Enter your Event description") }}
       </div>
       <div class="form-group">
         {{ form.eventType.label }}
-        {{ form.eventType(class='form-control', placeholder="") }}
+        {{ form.eventType(class='form-control', placeholder="Enter your Event type") }}
       </div>
       <div class="form-group">
         {{ form.eventDate.label }}
-        {{ form.eventDate(class='form-control') }}
+        {{ form.eventDate(class='form-control', placeholder="Enter your Event date") }}
       </div>
       <button type="submit" name="submit" class="btn btn-primary btn-block">Submit</button>
     </form>
