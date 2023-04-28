@@ -36,7 +36,7 @@ FC33,Fundamentals in Carpentry
 FW34,Fundamentals in Welding
 FT35,Fundamentals in Telecommunications
 FM36,Fundamentals in Machinery
-FW37,Fundamentals in Web DEvelopement
+FW37,Fundamentals in Web Developement
 FD38,Fundamentals in Database Management
 FD39,Fundamentals in Discrete Mathematics
 NP0,Novice Python
@@ -76,7 +76,7 @@ NC33,Novice Carpentry
 NW34,Novice Welding
 NT35,Novice Telecommunications
 NM36,Novice Machinery
-NW37,Novice Web DEvelopement
+NW37,Novice Web Developement
 ND38,Novice Database Management
 ND39,Novice Discrete Mathematics
 IP0,Intermediate Python
@@ -116,7 +116,7 @@ IC33,Intermediate Carpentry
 IW34,Intermediate Welding
 IT35,Intermediate Telecommunications
 IM36,Intermediate Machinery
-IW37,Intermediate Web DEvelopement
+IW37,Intermediate Web Developement
 ID38,Intermediate Database Management
 ID39,Intermediate Discrete Mathematics
 AP0,Advanced Python
@@ -156,7 +156,7 @@ AC33,Advanced Carpentry
 AW34,Advanced Welding
 AT35,Advanced Telecommunications
 AM36,Advanced Machinery
-AW37,Advanced Web DEvelopement
+AW37,Advanced Web Developement
 AD38,Advanced Database Management
 AD39,Advanced Discrete Mathematics
 EP0,Expert Python
@@ -196,6 +196,6 @@ EC33,Expert Carpentry
 EW34,Expert Welding
 ET35,Expert Telecommunications
 EM36,Expert Machinery
-EW37,Expert Web DEvelopement
+EW37,Expert Web Developement
 ED38,Expert Database Management
 ED39,Expert Discrete Mathematics

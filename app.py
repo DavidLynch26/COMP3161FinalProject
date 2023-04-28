@@ -5,7 +5,7 @@ import json
 import string
 import mysql.connector
 import random2 as random
-from datetime import timedelta
+from datetime import timedelta, date
 from forms import LoginForm, AssignmentForm, EventForm, AddUser
 from flask import Flask, request, make_response, render_template, redirect, session, url_for
 
@@ -95,6 +95,25 @@ def assignments(course_id):
         return make_response(assignmentLst, 200)
     except Exception as e:
         return make_response({"Failed": str(e)}, 400)
+
+@app.route('/Availablecourses')
+def availCourses():
+    try:
+        query = "SELECT * FROM Courses"
+        conn, cursor = connectToDB()
+        courseLst = []
+        cursor.execute(query)
+        for idNumber, courseName in cursor:
+            course = {}
+            course['Course ID'] = idNumber
+            course['Course Name'] = courseName
+            courseLst.append(course)
+        conn.close()
+        cursor.close()
+        return make_response(courseLst, 200)
+    except Exception as e:
+        return make_response({"Failed": str(e)}, 400)
+
 
 @app.route('/Courses', methods = ['GET'])
 def courses():
@@ -245,11 +264,11 @@ def addAssignment(course_id):
         return make_response({'Success': 'Assignment Added'}, 200)
     except Exception as e:
         return make_response({"Failed": str(e)}, 400)
-    # return render_template("addEvent.html", form = form, course_id = course_id)
 
 def toList(func):
-    word = func().data
-    word = str(word, 'utf-8')
+    if type(func) != type("str"):
+        word = func().data
+        word = str(word, 'utf-8')
     word = " ".join(word.split()).strip("[]").replace('" ', '"').replace(' "', '"')
     
     tmpLst = []
@@ -270,15 +289,29 @@ def addUser():
     if form.validate_on_submit():
         try:
             conn, cursor = connectToDB()
-            firstName = request.form['firstName']
-            lastName = request.form['lastName']
+            firstName = request.form['firstName'].capitalize()
+            lastName = request.form['lastName'].capitalize()
             email = request.form['email']
             birthday = request.form['birthday']
             password = request.form['password']
             userChoice = request.form['userChoice']
-            print(userChoice)
-            # if userChoice == "Admin":
-            return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: courses()))
+            birthdaySplit = [int(birthday) for birthday in birthday.split("-")]
+            age = date.today().year - birthdaySplit[0] - ((date.today().month, date.today().day) < (birthdaySplit[1], birthdaySplit[2]))
+            if userChoice != "Admin":
+                return redirect(url_for("selectCourse", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice))
+            else:
+                try:
+                    query = "SELECT COUNT(`Admin ID`) FROM Admins"
+                    cursor.execute(query)
+                    rowCount = cursor.fetchone()[0]               
+                    query = f"INSERT INTO Admins VALUES('A{rowCount}', {firstName!r}, {lastName!r}, {email!r}, {age!r}, {birthday!r}, {password!r})"
+                    cursor.execute(query)
+                    conn.commit()
+                    conn.close()
+                    cursor.close()
+                    return render_template("addUser.html", form = form, message = "User added succussfully")
+                except Exception as e:
+                    return make_response({"Failed": str(e)}, 400)
         except Exception as e:
             return make_response({"Failed": str(e)}, 400)
     return render_template("addUser.html", form = form)
@@ -287,11 +320,29 @@ def addUser():
 def addCourse():
     return render_template("addCourse.html")
 
-@app.route(f'/{sN}/user/selectCourse/<firstName>&<lastName>&<email>&<birthday>&<password>&<userChoice>&<courses>', methods = ['GET', 'POST'])
-def selectCourse(firstName, lastName, email, birthday, password, userChoice, courses):
-    
-    print("asdasd")
-    # if request.form.validate_on_submit():
+@app.route(f'/{sN}/user/selectCourse/<firstName>&<lastName>&<email>&<age>&<birthday>&<password>&<userChoice>', methods = ['GET', 'POST'])
+def selectCourse(firstName, lastName, email, age, birthday, password, userChoice):
+    if request.method == "POST":
+        conn, cursor = connectToDB()
+        if userChoice == "Students":
+            user = "Students"
+        else:
+            user = "Lecturers"
+        query = "SELECT COUNT(`Student ID`) FROM Students"
+        cursor.execute(query)
+        rowCount = cursor.fetchone()[0] 
+
+        selectedCourses = request.form.getlist('Selected Courses')
+
+        query = f"INSERT INTO Students VALUES('S{rowCount}', {firstName!r}, {lastName!r}, {email!r}, {age!r}, {birthday!r}, {password!r})"
+        cursor.execute(query)
+        conn.commit()
+        for course in selectedCourses:
+            query = f"INSERT INTO `Course Students` VALUES({course!r}, 'S{rowCount!r}', '0')"
+            cursor.execute(query)
+            conn.commit()
+        conn.close()
+        cursor.close()
         # if userChoice == "Lecturer":
 
         # elif userChoice == "Student":
@@ -301,7 +352,7 @@ def selectCourse(firstName, lastName, email, birthday, password, userChoice, cou
         # query = "INSERT INTO"
     # else:
 
-    return render_template("selectCourse.html", userChoice = userChoice)
+    return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: courses()))
 
 @app.route(f'/{sN}/course/addEvent/<course_id>', methods = ['GET', 'POST'])
 def addEventPage(course_id):

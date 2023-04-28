@@ -96,7 +96,7 @@ def createStudentsFile(f):
     f"  {header[2][6]} VARCHAR(255)\n"
     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
 
-    with open('students.csv', 'w+', encoding = 'UTF8', newline = '') as s:
+    with open('Students.csv', 'w+', encoding = 'UTF8', newline = '') as s:
         writer = csv.writer(s)
         writer.writerow(header[2])
         f.write("LOCK TABLES `students` WRITE;\n")
@@ -130,7 +130,7 @@ def createCoursesFile(f):
         f"  `{header[0][1]}` VARCHAR(255)\n"
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
 
-    with open('courses.csv', 'w+', encoding = 'UTF8', newline = '') as c:
+    with open('Courses.csv', 'w+', encoding = 'UTF8', newline = '') as c:
         writer = csv.writer(c)
         writer.writerow(header[0])
         f.write("LOCK TABLES `courses` WRITE;\n")
@@ -152,7 +152,7 @@ def createAdminsFile(f):
         f"  {header[1][6]} VARCHAR(255)\n"
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])
 
-    with open('admins.csv', 'w+', encoding = 'UTF8', newline = '') as a:
+    with open('Admins.csv', 'w+', encoding = 'UTF8', newline = '') as a:
         writer = csv.writer(a)
         writer.writerow(header[1])
         f.write("LOCK TABLES `admins` WRITE;\n")
@@ -190,7 +190,7 @@ def createCourseLecturersFile(f):
         f"  `{header[5][1]}` VARCHAR(255)\n"
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])    
 
-    with open('Courses_Lecturer.csv', 'w+', encoding = 'UTF8', newline = '') as cl:
+    with open('Courses_Lecturers.csv', 'w+', encoding = 'UTF8', newline = '') as cl:
         writer = csv.writer(cl)
         writer.writerow(header[5])
         counter = 0
@@ -215,7 +215,7 @@ def createLecturersFile(f):
         f"  {header[3][6]} VARCHAR(255)\n"
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"]) 
 
-    with open('lecturers.csv', 'w+', encoding = 'UTF8', newline = '') as l:
+    with open('Lecturers.csv', 'w+', encoding = 'UTF8', newline = '') as l:
         writer = csv.writer(l)
         writer.writerow(header[3])
         for lecturer in lecturers:
@@ -274,6 +274,6 @@ def createFiles(lst):
     f.close()
 
 try:
-    createFiles(["ca", "cc"])
+    createFiles(["All"])
 except Exception as e:
     logger.exception(str(e))
