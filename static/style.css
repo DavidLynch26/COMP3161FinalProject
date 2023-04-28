@@ -9,3 +9,11 @@ body footer{
     background-color: darkred;
     padding: 8px;
 }
+
+body header a{
+    color: #ffffff;
+}
+
+body header a.hover{
+    color:#0000ff;
+}
