@@ -78,6 +78,7 @@ def event(course_id):
             event['Date'] = eventDate
             event['Course Name'] = courseName
             eventLst.append(event)
+            print(eventLst)
         conn.close()
         cursor.close()
         return make_response(eventLst, 200)
@@ -107,24 +108,24 @@ def assignments(course_id):
     except Exception as e:
         return make_response({"Failed": str(e)}, 400)
 
-@app.route('/Availablecourses')
+@app.route('/Availablecourses', methods = ['GET'])
 def availCourses():
     try:
-        query = "SELECT * FROM Courses"
+        query = "SELECT `Course ID`, `Course Name` FROM Courses WHERE `Course ID` NOT IN (SELECT `Course ID` FROM `Course Lecturers`);"
         conn, cursor = connectToDB()
         courseLst = []
         cursor.execute(query)
-        for idNumber, courseName in cursor:
+        for courseID, courseName in cursor:
             course = {}
-            course['Course ID'] = idNumber
+            course['Course ID'] = courseID
             course['Course Name'] = courseName
             courseLst.append(course)
+        print(courseLst)
         conn.close()
         cursor.close()
         return make_response(courseLst, 200)
     except Exception as e:
         return make_response({"Failed": str(e)}, 400)
-
 
 @app.route('/Courses', methods = ['GET'])
 def courses():
@@ -161,6 +162,50 @@ def courseByStudent(student_id):
         return make_response(courseLst, 200)
     except Exception as e:
         return make_response({"Failed": str(e)}, 400)
+
+@app.route('/StudentsByCourse/<course_id>', methods = ['GET'])
+def studentsByCourse(course_id):
+    try:
+        query = f"SELECT Students.`Student ID`, Students.`First Name`, Students.`Last Name` FROM Students INNER JOIN `Course Students` ON Students.`Student ID` = `Course Students`.`Student ID` WHERE `Course Students`.`Course ID` = {course_id!r}"
+        conn, cursor = connectToDB()
+        cursor.execute(query)
+        studentLst = []
+        for studID, firstName, lastName in cursor:
+            student = {}
+            student['Student ID'] = studID
+            student['First Name'] = firstName
+            student['Last Name'] = lastName
+            studentLst.append(student)
+        conn.close()
+        cursor.close()
+        return make_response(studentLst, 200)
+    except Exception as e:
+        return make_response({"Failed": str(e)}, 400)
+
+@app.route('/LecturerByCourse/<course_id>', methods = ['GET'])
+def lecturerByCourse(course_id):
+    try:
+        query = f"SELECT Lecturers.`Lecturer ID`, Lecturers.`First Name`, Lecturers.`Last Name` FROM Lecturers INNER JOIN `Course Lecturers` ON Lecturers.`Lecturer ID` = `Course Lecturers`.`Lecturer ID` WHERE `Course Lecturers`.`Course ID` = {course_id!r}"
+        lecturerLst = []
+        conn, cursor = connectToDB()
+        cursor.execute(query)
+        row = cursor.fetchone()
+        if row is not None:
+            lectID, firstName, lastName = row
+            lecturer = {}
+            lecturer['Lecturer ID'] = lectID
+            lecturer['First Name'] = firstName
+            lecturer['Last Name'] = lastName
+            lecturerLst.append(lecturer)
+        conn.close()
+        cursor.close()
+        return make_response(lecturerLst, 200)
+    except Exception as e:
+        return make_response({"Failed": str(e)}, 400)
+
+@app.route('/GetCourseMembers/<course_id>', methods = ['GET'])
+def getCourseMembersByCourseID(course_id):
+    return make_response(toList(lambda: studentsByCourse(course_id)) + toList(lambda: lecturerByCourse(course_id)), 200)
 
 @app.route('/CoursesByLecturer/<lecturer_id>', methods = ['GET'])
 def courseByLecturer(lecturer_id):
@@ -276,12 +321,15 @@ def addAssignment(course_id):
     except Exception as e:
         return make_response({"Failed": str(e)}, 400)
 
+# @app.route('/CreateCourse', methods = ['POST'])
+# def createCourse():
+
+
 def toList(func):
-    if type(func) != type("str"):
-        word = func().data
-        word = str(word, 'utf-8')
+    word = func().data
+    word = str(word, 'utf-8')
     word = " ".join(word.split()).strip("[]").replace('" ', '"').replace(' "', '"')
-    
+
     tmpLst = []
     temp = ""
 
@@ -294,8 +342,8 @@ def toList(func):
             temp += let
     return tmpLst
 
-@app.route(f'/{sN}/user', methods = ['GET', 'POST'])
-def addUser():
+@app.route(f'/{sN}/addUser', methods = ['GET', 'POST'])
+def addUserPage():
     form = AddUser()
     if form.validate_on_submit():
         try:
@@ -331,7 +379,7 @@ def addUser():
     return render_template("addUser.html", form = form)
 
 @app.route(f'/{sN}/addCourse', methods = ['GET', 'POST'])
-def addCourse():
+def addCoursePage():
     form = AddCourse()
     if form.validate_on_submit():
         try:
@@ -384,36 +432,48 @@ def addCourse():
 def selectCourse(firstName, lastName, email, age, birthday, password, userChoice):
     if request.method == "POST":
         try:
-            conn, cursor = connectToDB()
-            if userChoice == "Students":
-                user = "Students"
-            else:
-                user = "Lecturers"
-            query = f"SELECT COUNT(`{user[:-1]} ID`) FROM {user}"
-            cursor.execute(query)
-            rowCount = cursor.fetchone()[0] 
-
+            
             selectedCourses = request.form.getlist('Selected Courses')
+            print(selectedCourses, len(selectedCourses) < 3, userChoice == "Student", userChoice)
+            if userChoice == "Student" and len(selectedCourses) < 3:
+                return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: courses()), message = "Not enough courses are chosen")
+            elif userChoice == "Lecturer" and len(selectedCourses) < 1:
+                return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: availCourses()), message = "Not enough courses are chosen")
 
-            query = f"INSERT INTO {user} VALUES('{user[0]}{rowCount}', {firstName!r}, {lastName!r}, {email!r}, {age!r}, {birthday!r}, {password!r})"
+            userChoice += "s"
+            query = f"SELECT COUNT(`{userChoice[:-1]} ID`) FROM {userChoice}"
+            conn, cursor = connectToDB()
             cursor.execute(query)
-            conn.commit()
-            userID = user[0] + str(rowCount)
+           
+            rowCount = cursor.fetchone()[0]
+            userID = userChoice[0] + str(rowCount) 
             conn.close()
             cursor.close()
+
+            query = f"INSERT INTO {userChoice} VALUES('{userChoice[0]}{rowCount}', {firstName!r}, {lastName!r}, {email!r}, {age!r}, {birthday!r}, {password!r})"
+            conn, cursor = connectToDB()  
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            cursor.close()
+
             conn, cursor = connectToDB()
             for course in selectedCourses:
-                if user == "Lecturer":
-                    query = f"INSERT INTO `Course {user}` VALUES({course!r}, {userID!r})"
+                if userChoice == "Lecturers":
+                    query = f"INSERT INTO `Course {userChoice}` VALUES({course!r}, {userID!r})"
                 else:
-                    query = f"INSERT INTO `Course {user}` VALUES({course!r}, {userID!r}, '0')"
+                    query = f"INSERT INTO `Course {userChoice}` VALUES({course!r}, {userID!r}, '0')"
                 cursor.execute(query)
             conn.commit()
             conn.close()
             cursor.close()
+            return redirect(url_for('homePage'))
         except Exception as e:
             return make_response({"Failed": str(e)}, 400)
-    return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: courses()))
+    if userChoice == "Student":
+        return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: courses()))
+    else:
+         return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: availCourses()))       
 
 @app.route(f'/{sN}/course/addEvent/<course_id>', methods = ['GET', 'POST'])
 def addEventPage(course_id):
@@ -542,7 +602,10 @@ def landingPage():
 def coursePage(course_id, course_name):
     courseCalenders = toList(lambda: event(course_id))
     courseAssignments = toList(lambda: assignments(course_id))
-    return render_template("coursePage.html", course_id = course_id, course_name = course_name, calender = courseCalenders, assignments = courseAssignments)
+    courseLecturer = toList(lambda: lecturerByCourse(course_id))
+    courseStudents = toList(lambda: studentsByCourse(course_id))
+    print(courseLecturer)
+    return render_template("coursePage.html", course_id = course_id, course_name = course_name, calender = courseCalenders, assignments = courseAssignments, lecturer = courseLecturer, courseStudents = courseStudents)
 
 if __name__ == 'main':
     app.run()

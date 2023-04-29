@@ -59,6 +59,47 @@ header = [["Course ID", "Course Name"],
 levels = ["Fundamentals in ", "Novice ", "Intermediate ", "Advanced ", "Expert "]
 courseSubjects = ["Python", "Javascript", "C#", "Java", "C", "C++", "PHP", "Kotlin", "R", "HTML", "CSS", "Swift", "GO", "Ruby", "Pascal", "Dart", "Pascal", "Rust", "Cobol", "Calculus", "Calculus", "Electronic Circuit Analysis", "Statistics", "Chemistry", "Biology", "Physics", "Information Technology", "Calculus 2", "Electronics", "Physical Education", "Health and Nutrition", "Home and Family Life Education", "Civics", "Carpentry", "Welding", "Telecommunications", "Machinery", "Web Developement", "Database Management", "Discrete Mathematics"]
 
+def createViews(f):
+    query = """CREATE VIEW `Greater Than 50 Students` AS
+SELECT Courses.`Course ID`, Courses.`Course Name` 
+FROM Courses
+INNER JOIN `Course Students`
+ON Courses.`Course ID` = `Course Students`.`Course ID`
+GROUP BY `Course Students`.`Course ID`
+HAVING COUNT(`Course Students`.`Course ID`) > 49;\n\n"""
+    query += """CREATE VIEW `Students Doing 5 or More Courses` AS
+SELECT COUNT(`course students`.`Student ID`) as `Course Count`, Students.`Student ID`, Students.`First Name`, Students.`Last Name`
+FROM `course students`
+INNER JOIN Students
+ON `course students`.`Student ID` = Students.`Student ID`
+GROUP BY `Student ID`
+HAVING COUNT(`course students`.`Student ID`) > 4;\n\n"""
+    query += """CREATE VIEW `Lecturers Teaching 3 or More Courses` AS
+SELECT COUNT(`Course Lecturers`.`Lecturer ID`) as `Course Count`, Lecturers.`Lecturer ID`, Lecturers.`First Name`, Lecturers.`Last Name`
+FROM `Course Lecturers`
+INNER JOIN Lecturers
+ON `Course Lecturers`.`Lecturer ID` = Lecturers.`Lecturer ID`
+GROUP BY `Lecturer ID`
+HAVING COUNT(`Course Lecturers`.`Lecturer ID`) > 2;\n\n"""
+    query += """CREATE VIEW `10 Most Enrolled Courses` AS
+SELECT COUNT(`Course Students`.`Student ID`) AS `Student Amount`, `Course Students`.`Course ID`, Courses.`Course Name`
+FROM `Course Students`
+INNER JOIN Courses
+ON `Course Students`.`Course ID` = Courses.`Course ID`
+GROUP BY `Course Students`.`Course ID`
+ORDER BY COUNT(`Course Students`.`Student ID`) DESC
+LIMIT 10;\n\n"""
+    query += """CREATE VIEW `Top 10 Students By Average` AS
+SELECT AVG(`Course Students`.Grade), Students.`Student ID`, Students.`First Name`, Students.`Last Name`
+FROM `Course Students`
+INNER JOIN Students
+ON `Course Students`.`Student ID` = Students.`Student ID`
+GROUP BY `Course Students`.`Student ID`
+ORDER BY AVG(`Course Students`.Grade) DESC
+LIMIT 10;\n\n"""
+
+    f.write(query)
+
 courses = [[x[0] + y[0:1] + str(n), x+y] for x in levels for n, y in enumerate(courseSubjects)]
 admins = []
 lecturers = []
@@ -249,6 +290,7 @@ def createCourseCalenders(f):
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;\n\n"])   
 
 functionDict = {
+    'cv': createViews,
     'cc': createCourseCalenders,
     'ca': createCourseAssignments,
     'a': createAdminsFile,
@@ -274,6 +316,7 @@ def createFiles(lst):
     f.close()
 
 try:
-    createFiles(["All"])
+    createFiles(["cv"])
+    
 except Exception as e:
     logger.exception(str(e))

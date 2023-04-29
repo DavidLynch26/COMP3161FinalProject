@@ -1,18 +1,24 @@
 {% extends 'base.html' %}
 {% block main %}
-    <p></p>
+    <p>{{message}}</p>
     <form action="{{url_for('selectCourse', firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice)}}", method="post", name = "Select Course Form">
-        <label for="Select Courses">Select Courses</label><br>
+        {{userChoice}}
+        {% if userChoice == "Student": %}
+            <label for="Select Courses">Select 3-6 Courses</label>
+        {% else %}
+            <label for="Select Courses">Select 1-5 Courses</label>
+        {% endif %}
+            <br>
         {% for course in courses %}
-            <label for="Selected Courses">
+            <label for="Selected Courses"></label>
                 <input type="checkbox" name="Selected Courses" value = "{{course['Course ID']}}">
             {{course['Course Name']}}</label><br>
         {% endfor %}
         <button type="submit" name="submit" class="btn btn-primary btn-block">Submit</button>
     </form>
-    {% if userChoice == "Lecturer" %}
-        <script type="text/javascript">checkBoxLimit5()</script>
-    {% elif userChoice == "Student" %}
-        <script type="text/javascript">checkBoxLimit()</script>
+    {% if userChoice == "Student" %}
+        <script type="text/javascript">checkBoxLimit()</script>  
+    {% else %}
+        <script type="text/javascript">checkBoxLimit5()</script> 
     {% endif %}
 {% endblock main %}

@@ -27,4 +27,17 @@
         </ul>
         {% endif %}
     </h3>
+    <h3>
+        Users
+        <h3>Lecturer</h3>
+            <p>{{lecturer[0]['First Name']}} {{lecturer[0]['Last Name']}}</p>
+        <h3>Students</h3>
+        <ul>
+            {% for student in courseStudents: %}
+                <li>
+                    {{student['First Name']}} {{student['Last Name']}}
+                </li>
+            {% endfor %}
+        </ul>
+    </h3>
 {% endblock main %}
