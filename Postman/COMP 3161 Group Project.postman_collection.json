@@ -1,0 +1,363 @@
+{
+	"info": {
+		"_postman_id": "70c35675-fdf9-450c-8fa8-7ff29a39abb0",
+		"name": "COMP 3161 Group Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26314981"
+	},
+	"item": [
+		{
+			"name": "Course",
+			"item": [
+				{
+					"name": "Calender",
+					"item": [
+						{
+							"name": "Add Event",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Event Name\":\"First calender event\",\r\n    \"Event Type\":\"First Event Type\",\r\n    \"Event Date\":\"2022/12/12\",\r\n    \"Event Description\":\"First Calender Decription\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/Course/addEvent/AB24",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"Course",
+										"addEvent",
+										"AB24"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Event",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/Event/AB24",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"Event",
+										"AB24"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Assignment",
+					"item": [
+						{
+							"name": "Get Assignment",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/Assignment/AB24",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"Assignment",
+										"AB24"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Assignment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Assignment Name\":\"First Assignment\",\r\n    \"Assignment Type\":\"First Assignment Type\",\r\n    \"Assignment Start Date\":\"2022/12/12\",\r\n    \"Assignment Due Date\":\"2022/12/12\",\r\n    \"Assignment Description\":\"First Assignment Decription\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/Course/addAssignment/AB24",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"Course",
+										"addAssignment",
+										"AB24"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/Courses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Courses By Student",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/CoursesByStudent/S100",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"CoursesByStudent",
+								"S100"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Courses By Lecturer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/CoursesByLecturer/L12",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"CoursesByLecturer",
+								"L12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Course",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Course Members By Course ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/GetCourseMembers/AB24",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"GetCourseMembers",
+								"AB24"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student",
+			"item": [
+				{
+					"name": "Get Students By Course",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/StudentsByCourse/S0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"StudentsByCourse",
+								"S0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lecturer",
+			"item": [
+				{
+					"name": "Get Lecturer By Course",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/LecturerByCourse/L0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"LecturerByCourse",
+								"L0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": []
+		},
+		{
+			"name": "Views",
+			"item": [
+				{
+					"name": "Courses With Greater Than 50 Students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/GreaterThan50",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"GreaterThan50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Students Enrolled in 5 Or more Courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/Students5OrMore",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Students5OrMore"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lecturers Teaching 3 Or More Courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/Lecturers3OrMore",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Lecturers3OrMore"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Top 10 Most Enrolled Courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/MostEnrolledCourses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MostEnrolledCourses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Top 10 Student Averages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/TopStudentAverages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"TopStudentAverages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Login/S9&vNGdQ2hWZ4t4Bnqm",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Login",
+						"S9&vNGdQ2hWZ4t4Bnqm"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

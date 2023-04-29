@@ -62,6 +62,103 @@ def availUsers(userType, lst):
     except Exception as e:
         return make_response({"Failed": str(e)}, 400)
 
+@app.route('/GreaterThan50', methods = ['GET'])
+def greaterThan50():
+    try:
+        query = "SELECT * FROM `Greater Than 50 Students`"
+        conn, cursor = connectToDB
+        cursor.execute(query)
+        courseLst = []
+        for courseID, courseName in cursor:
+            course = {}
+            course['Course ID'] = courseID
+            course['Course Name'] = courseName
+            courseLst.append(course)
+        conn.close()
+        cursor.close()
+        return make_response(courseLst, 200)
+    except Exception as e:
+        return make_response({'Failed': str(e)}, 400)
+
+@app.route('/Students5OrMore', methods = ['GET'])
+def students5OrMore():
+    try:
+        query = "SELECT * FROM `Students Doing 5 or More Courses`"
+        conn, cursor = connectToDB
+        cursor.execute(query)
+        studentLst = []
+        for courseCount, studentID, firstName, lastName in cursor:
+            student = {}
+            student['Course Count'] = courseCount
+            student['Student ID'] = studentID
+            student['First Name'] = firstName
+            student['Last Name'] = lastName
+            studentLst.append(student)
+        conn.close()
+        cursor.close()
+        return make_response(studentLst, 200)
+    except Exception as e:
+        return make_response({'Failed': str(e)}, 400)
+
+@app.route('/Lecturers3OrMore', methods = ['GET'])
+def lecturers3OrMore():
+    try:
+        query = "SELECT * FROM `Lecturers Teaching 3 or More Courses`"
+        conn, cursor = connectToDB
+        cursor.execute(query)
+        lecturerLst = []
+        for courseCount, lecturerID, firstName, lastName in cursor:
+            lecturer = {}
+            lecturer['Course Count'] = courseCount
+            lecturer['Lecturer ID'] = lecturerID
+            lecturer['First Name'] = firstName
+            lecturer['Last Name'] = lastName
+            lecturerLst.append(lecturer)
+        conn.close()
+        cursor.close()
+        return make_response(lecturerLst, 200)
+    except Exception as e:
+        return make_response({'Failed': str(e)}, 400)
+
+@app.route('/MostEnrolledCourses', methods = ['GET'])
+def mostEnrolledCourses():
+    try:
+        query = "SELECT * FROM `10 Most Enrolled Courses`"
+        conn, cursor = connectToDB
+        cursor.execute(query)
+        courseLst = []
+        for studentCount, courseID, courseName in cursor:
+            course = {}
+            course['Student Count'] = courseCount
+            course['Course ID'] = courseID
+            course['Course Name'] = courseName
+            courseLst.append(course)
+        conn.close()
+        cursor.close()
+        return make_response(courseLst, 200)
+    except Exception as e:
+        return make_response({'Failed': str(e)}, 400)
+
+@app.route('/TopStudentAverages', methods = ['GET'])
+def topStudentAverages():
+    try:
+        query = "SELECT * FROM `Top 10 Students By Average`"
+        conn, cursor = connectToDB
+        cursor.execute(query)
+        studentLst = []
+        for studentAvg, studentID, firstName, lastName in cursor:
+            student = {}
+            student['Student Average'] = studentAvg
+            student['Student ID'] = studentID
+            student['First Name'] = firstName
+            student['Last Name'] = lastName
+            studentLst.append(student)
+        conn.close()
+        cursor.close()
+        return make_response(studentLst, 200)
+    except Exception as e:
+        return make_response({'Failed': str(e)}, 400)
+
 @app.route('/Event/<course_id>', methods = ['GET'])
 def event(course_id):
     try:
