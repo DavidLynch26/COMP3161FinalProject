@@ -419,10 +419,6 @@ def addAssignment(course_id):
     except Exception as e:
         return make_response({"Failed": str(e)}, 400)
 
-# @app.route('/CreateCourse', methods = ['POST'])
-# def createCourse():
-
-
 def toList(func):
     word = func().data
     word = str(word, 'utf-8')
