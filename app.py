@@ -440,9 +440,9 @@ def toList(func):
             temp += let
     return tmpLst
 
-# @app.reoute(f'/{sN}/report')
-# def reportPage():
-
+@app.route(f'/{sN}/reports')
+def reportsPage():
+    return render_template("reports.html", reports = [{"Report Name":""}, {"Report Name":""}, {"Report Name":""}, {"Report Name":""}, {"Report Name":""}])
 
 @app.route(f'/{sN}/addUser', methods = ['GET', 'POST'])
 def addUserPage():
