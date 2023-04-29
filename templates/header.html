@@ -5,7 +5,7 @@
             <li><a href ="{{ url_for('homePage')}}">Home</a></li>
             {% if session['type'] == "Admin": %}<li><a href ="{{ url_for('addUserPage')}}">Users</a></li>{% endif %}
             {% if session['type'] == "Admin": %}<li><a href ="{{ url_for('addCoursePage')}}">Courses</a></li>{% endif %}
-            {% if session['type'] != "Student": %}<li><a href ="{{ url_for('reportsPage')}}">Reports</a></li>{% endif %}
+            {% if session['type'] == "Admin" or session['type'] == "Lecturer": %}<li><a href ="{{ url_for('reportsPage')}}">Reports</a></li>{% endif %}
         </ul>
     </nav>
     {% if session.get('logged_in') == True: %}

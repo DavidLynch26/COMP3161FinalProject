@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 {% block main %}
+    <h2>Reports</h2>
     <ul>
-        
         {% for report in reports: %}
-        <li><a href="">{{ report['Report Name'] }}</a></li>
+        <li><a href="{{ url_for('reportPage', report_id = report['Report ID']) }}">{{ report['Report Name'] }}</a></li>
         {% endfor %}
-        
     </ul>
 {% endblock main %}

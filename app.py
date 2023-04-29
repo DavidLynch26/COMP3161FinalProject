@@ -442,7 +442,11 @@ def toList(func):
 
 @app.route(f'/{sN}/reports')
 def reportsPage():
-    return render_template("reports.html", reports = [{"Report Name":""}, {"Report Name":""}, {"Report Name":""}, {"Report Name":""}, {"Report Name":""}])
+    return render_template("reports.html", reports = [{"Report ID":"0", "Report Name":"Courses with 50 students and over"}, {"Report ID":"1", "Report Name":"Students doing 5 or more courses"}, {"Report ID":"2", "Report Name":"Lecturers teaching 3 or more courses"}, {"Report ID":"3", "Report Name":"Top 10 most enrolled students"}, {"Report ID":"4", "Report Name":"Top 10 students with the highest average"}])
+
+# @app.route(f'/{sN}/report')
+# def reportPage():
+#     return()
 
 @app.route(f'/{sN}/addUser', methods = ['GET', 'POST'])
 def addUserPage():
