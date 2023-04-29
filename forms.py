@@ -23,7 +23,7 @@ class AssignmentForm(FlaskForm):
 class AddUser(FlaskForm):
     firstName = StringField('First Name', validators=[InputRequired()])
     lastName = StringField('Last Name', validators=[InputRequired()])
-    email = StringField("Email",  [InputRequired("Please enter your email address."), Email("This field requires a valid email address")])
+    # email = StringField("Email",  [InputRequired("Please enter your email address."), Email("This field requires a valid email address")])
     birthday = DateField('Birthday', format = '%Y-%m-%d')
     password = PasswordField('Password', validators=[InputRequired()])
     userChoice = SelectField('User Type', choices = [("Admin", "Admin"), ("Student", "Student"), ("Lecturer", "Lecturer")])

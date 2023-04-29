@@ -467,10 +467,10 @@ def addUserPage():
             conn, cursor = connectToDB()
             firstName = request.form['firstName'].capitalize()
             lastName = request.form['lastName'].capitalize()
-            email = request.form['email']
             birthday = request.form['birthday']
             password = request.form['password']
             userChoice = request.form['userChoice']
+            email = firstName + lastName + "@mymona.uwi.edu" if userChoice == "Student" else firstName + lastName +  "@uwimona.edu.jm"
             birthdaySplit = [int(birthday) for birthday in birthday.split("-")]
             age = date.today().year - birthdaySplit[0] - ((date.today().month, date.today().day) < (birthdaySplit[1], birthdaySplit[2]))
             if userChoice != "Admin":
