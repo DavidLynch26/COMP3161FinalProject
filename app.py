@@ -6,7 +6,7 @@ import string
 import mysql.connector
 import random2 as random
 from datetime import timedelta, date
-from forms import LoginForm, AssignmentForm, EventForm, AddUser
+from forms import LoginForm, AssignmentForm, EventForm, AddUser, AddCourse
 from flask import Flask, request, make_response, render_template, redirect, session, url_for
 
 app = Flask(__name__, template_folder = 'templates', static_folder = 'static')
@@ -35,19 +35,30 @@ def connectToDB():
 
     return conn, cursor
 
-@app.route('/users/<type>')
-def users(type):
+def availUsers(userType, lst):
     try:
         conn, cursor = connectToDB()
-        if type == "Student":
-            query = "SELECT `course students`.`Student ID`, students.`First Name`, students.`Last Name` "
-            query += "FROM `course students` INNER JOIN students ON `course students`.`Student ID` = students.`Student ID` "
-            query += "GROUP BY `course students`.`Student ID` HAVING COUNT(`course students`.`Student ID`) > 5"
+        userLst = []
+        lst = tuple(lst)
+        if userType == "Student":
+            query = f"SELECT `Student ID` FROM `Course Students`GROUP BY `Student ID` HAVING `Student ID` IN {lst} AND COUNT(`STUDENT ID`) < 6"
             cursor.execute(query)
-        elif type == "Lecturer":
-
+            for studID in cursor:
+                student = {}
+                student['Student ID'] = studID
+                userLst.append(student)
+            conn.close()
+            cursor.close()
+        elif userType == "Lecturer":
+            query = f"SELECT `Lecturer ID` FROM `Course Lecturers`GROUP BY `Lecturer ID` HAVING `Lecturer ID` IN {lst} AND COUNT(`Lecturer ID`) < 6"
             cursor.execute(query)
-        return 
+            for lectID in cursor:
+                lecturer = {}
+                lecturer['Lecturer ID'] = lectID
+                userLst.append(lecturer)
+            conn.close()
+            cursor.close()
+        return make_response(userLst, 200) 
     except Exception as e:
         return make_response({"Failed": str(e)}, 400)
 
@@ -298,7 +309,10 @@ def addUser():
             birthdaySplit = [int(birthday) for birthday in birthday.split("-")]
             age = date.today().year - birthdaySplit[0] - ((date.today().month, date.today().day) < (birthdaySplit[1], birthdaySplit[2]))
             if userChoice != "Admin":
-                return redirect(url_for("selectCourse", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice))
+                if userChoice == "Lecturer":
+                    return redirect(url_for("selectCourse", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice))
+                else:
+                    return redirect(url_for("selectCourse", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice))
             else:
                 try:
                     query = "SELECT COUNT(`Admin ID`) FROM Admins"
@@ -318,40 +332,87 @@ def addUser():
 
 @app.route(f'/{sN}/addCourse', methods = ['GET', 'POST'])
 def addCourse():
-    return render_template("addCourse.html")
+    form = AddCourse()
+    if form.validate_on_submit():
+        try:
+            studentIDs = list(set([studentID.strip() for studentID in request.form['studentIDs'].split(",")]))
+            for studentID in studentIDs:
+                if studentID[0] != "S" or studentID[1:].isdigit() == False:
+                    invalidID = studentID
+                    if len(studentIDs) < 10:
+                        return render_template("addCourse.html", form = form, message = f"Invalid number of ID numbers, {10 - len(studentIDs)} more students needed")
+                    return render_template("addCourse.html", form = form, message = f"{invalidID} is an invalid ID number")
+            allStud = toList(lambda: availUsers("Student", studentIDs))
+            notIn = []
+            for stud in studentIDs:
+                inside = False
+                for studID in allStud:
+                    if stud == studID['Student ID'][0]:
+                        inside = True
+                if inside == False:notIn.append(stud)
+            if len(studentIDs) - len(notIn) < 10: return render_template("addCourse.html", form = form, message = f"{notIn} have reached the course threshold, class size less than 10, {10 - (len(studentIDs) - len(notIn))} more students needed")
+            courseName = request.form['courseName'].title()
+            courseLevel = request.form['courseLevel']
+            query = "SELECT COUNT(`Course ID`) FROM courses"
+            conn, cursor = connectToDB()
+            cursor.execute(query)
+            rowCount = cursor.fetchone()[0]
+            courseID = courseLevel[0] + courseName[0] + str(rowCount)
+            query = f"INSERT INTO Courses VALUES({courseID!r}, '{courseLevel}{courseName}')"
+            conn.close()
+            cursor.close()
+            conn, cursor = connectToDB()
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            cursor.close()
+
+            conn, cursor = connectToDB()
+            for stud in allStud:
+                query = f"INSERT INTO `Course Students` VALUES({courseID!r}, {stud['Student ID'][0]!r}, {0!r})"
+                cursor.execute(query)
+                print(query)
+            conn.commit()
+            conn.close()
+            cursor.close()
+            if len(notIn) > 1 or len(studentIDs) - len(notIn) > 10: return render_template("addCourse.html", form = form, message = f"{notIn} have reached the course threshold, other students will be added")
+        except Exception as e:
+            return make_response({"Failed": str(e)}, 400)
+    return render_template("addCourse.html", form = form)
 
 @app.route(f'/{sN}/user/selectCourse/<firstName>&<lastName>&<email>&<age>&<birthday>&<password>&<userChoice>', methods = ['GET', 'POST'])
 def selectCourse(firstName, lastName, email, age, birthday, password, userChoice):
     if request.method == "POST":
-        conn, cursor = connectToDB()
-        if userChoice == "Students":
-            user = "Students"
-        else:
-            user = "Lecturers"
-        query = "SELECT COUNT(`Student ID`) FROM Students"
-        cursor.execute(query)
-        rowCount = cursor.fetchone()[0] 
+        try:
+            conn, cursor = connectToDB()
+            if userChoice == "Students":
+                user = "Students"
+            else:
+                user = "Lecturers"
+            query = f"SELECT COUNT(`{user[:-1]} ID`) FROM {user}"
+            cursor.execute(query)
+            rowCount = cursor.fetchone()[0] 
 
-        selectedCourses = request.form.getlist('Selected Courses')
+            selectedCourses = request.form.getlist('Selected Courses')
 
-        query = f"INSERT INTO Students VALUES('S{rowCount}', {firstName!r}, {lastName!r}, {email!r}, {age!r}, {birthday!r}, {password!r})"
-        cursor.execute(query)
-        conn.commit()
-        for course in selectedCourses:
-            query = f"INSERT INTO `Course Students` VALUES({course!r}, 'S{rowCount!r}', '0')"
+            query = f"INSERT INTO {user} VALUES('{user[0]}{rowCount}', {firstName!r}, {lastName!r}, {email!r}, {age!r}, {birthday!r}, {password!r})"
             cursor.execute(query)
             conn.commit()
-        conn.close()
-        cursor.close()
-        # if userChoice == "Lecturer":
-
-        # elif userChoice == "Student":
-
-        # else:
-
-        # query = "INSERT INTO"
-    # else:
-
+            userID = user[0] + str(rowCount)
+            conn.close()
+            cursor.close()
+            conn, cursor = connectToDB()
+            for course in selectedCourses:
+                if user == "Lecturer":
+                    query = f"INSERT INTO `Course {user}` VALUES({course!r}, {userID!r})"
+                else:
+                    query = f"INSERT INTO `Course {user}` VALUES({course!r}, {userID!r}, '0')"
+                cursor.execute(query)
+            conn.commit()
+            conn.close()
+            cursor.close()
+        except Exception as e:
+            return make_response({"Failed": str(e)}, 400)
     return render_template("selectCourse.html", firstName = firstName, lastName = lastName, email = email, age = age, birthday = birthday, password = password, userChoice = userChoice, courses = toList(lambda: courses()))
 
 @app.route(f'/{sN}/course/addEvent/<course_id>', methods = ['GET', 'POST'])
@@ -374,7 +435,7 @@ def addEventPage(course_id):
             cursor.close()
             return render_template("addEvent.html", form = form, message = "Calender Event Added")
         except Exception as e:
-            return(str(e))      
+            return make_response({"Failed": str(e)}, 400)  
     return render_template("addEvent.html", form = form, course_id = course_id)
 
 @app.route(f'/{sN}/course/addAssignment/<course_id>', methods = ['GET', 'POST'])

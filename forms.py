@@ -31,6 +31,5 @@ class AddUser(FlaskForm):
 
 class AddCourse(FlaskForm):
     courseName = StringField('Course Name', validators=[InputRequired()])    
-     #categories = MultiCheckboxField('Categories',choices=[('news', 'News'), ('tutorial', 'Tutorial'), ('reviews', 'Reviews'), ('recommendations', 'Recommendations')
-     #categories = MultiCheckboxField('Categories',choices=[('news', 'News'), ('tutorial', 'Tutorial'), ('reviews', 'Reviews'), ('recommendations', 'Recommendations')
-     #categories = SelectField('Categories', choices=[('house', 'House'), ('apartment', 'Apartment')])
+    courseLevel = SelectField('Course Level', choices=[('Fundamentals in ', 'Fundamentals in '), ('Novice ', 'Novice '), ('Intermediate ', 'Intermediate '), ('Advanced ', 'Advanced '), ('Expert ', 'Expert ')])
+    studentIDs = StringField('Student ID Numbers', validators=[InputRequired()])

@@ -6,7 +6,7 @@
         {% for course in courses %}
             <label for="Selected Courses">
                 <input type="checkbox" name="Selected Courses" value = "{{course['Course ID']}}">
-            {{course['Course Name']}}</label> <br>
+            {{course['Course Name']}}</label><br>
         {% endfor %}
         <button type="submit" name="submit" class="btn btn-primary btn-block">Submit</button>
     </form>

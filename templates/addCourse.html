@@ -6,7 +6,15 @@
       {{ form.csrf_token }}
       <div class="form-group">
         {{ form.courseName.label }}
-        {{ form.courseName(class='form-control', placeholder="Enter your Course") }}
+        {{ form.courseName(class='form-control', placeholder="Enter the Course Name") }}
+      </div>
+      <div class="form-group">
+        {{ form.courseLevel.label }}
+        {{ form.courseLevel(class='form-control', placeholder="Select the course Level") }}
+      </div>
+      <div class="form-group">
+        {{ form.studentIDs.label }}
+        {{ form.studentIDs(class='form-control', placeholder="S0, S1, S2, S3") }}
       </div>
       <button type="submit" name="submit" class="btn btn-primary btn-block">Submit</button>
     </form>

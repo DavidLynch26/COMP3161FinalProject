@@ -15,9 +15,9 @@ database = "comp3161_final_sproject"
 <li>{{course[1][20:-1]}}</li>
 print(loginStatus, file=sys.stderr)
 
-Admin = A0, Nh451RzWb
-Lecturer = L0, DyjtHMDtQEk
-Student = S0, Dj0abr5h1np8ive
+Admin = A0, b3LVdqbCaRJ
+Lecturer = L0, BPiiQbayIz
+Student = S0, rO70HIRmEZZ
 S81, Krxc6Duj5NeYM
 
 <input type="date" name="date" id="date"> 
