@@ -66,11 +66,12 @@ def availUsers(userType, lst):
 def greaterThan50():
     try:
         query = "SELECT * FROM `Greater Than 50 Students`"
-        conn, cursor = connectToDB
+        conn, cursor = connectToDB()
         cursor.execute(query)
         courseLst = []
-        for courseID, courseName in cursor:
+        for studentCount, courseID, courseName in cursor:
             course = {}
+            course['Student Count'] = studentCount
             course['Course ID'] = courseID
             course['Course Name'] = courseName
             courseLst.append(course)
@@ -84,7 +85,7 @@ def greaterThan50():
 def students5OrMore():
     try:
         query = "SELECT * FROM `Students Doing 5 or More Courses`"
-        conn, cursor = connectToDB
+        conn, cursor = connectToDB()
         cursor.execute(query)
         studentLst = []
         for courseCount, studentID, firstName, lastName in cursor:
@@ -104,7 +105,7 @@ def students5OrMore():
 def lecturers3OrMore():
     try:
         query = "SELECT * FROM `Lecturers Teaching 3 or More Courses`"
-        conn, cursor = connectToDB
+        conn, cursor = connectToDB()
         cursor.execute(query)
         lecturerLst = []
         for courseCount, lecturerID, firstName, lastName in cursor:
@@ -124,12 +125,12 @@ def lecturers3OrMore():
 def mostEnrolledCourses():
     try:
         query = "SELECT * FROM `10 Most Enrolled Courses`"
-        conn, cursor = connectToDB
+        conn, cursor = connectToDB()
         cursor.execute(query)
         courseLst = []
         for studentCount, courseID, courseName in cursor:
             course = {}
-            course['Student Count'] = courseCount
+            course['Student Count'] = studentCount
             course['Course ID'] = courseID
             course['Course Name'] = courseName
             courseLst.append(course)
@@ -143,7 +144,7 @@ def mostEnrolledCourses():
 def topStudentAverages():
     try:
         query = "SELECT * FROM `Top 10 Students By Average`"
-        conn, cursor = connectToDB
+        conn, cursor = connectToDB()
         cursor.execute(query)
         studentLst = []
         for studentAvg, studentID, firstName, lastName in cursor:
@@ -438,6 +439,10 @@ def toList(func):
         elif let != "{" or let != "}":
             temp += let
     return tmpLst
+
+# @app.reoute(f'/{sN}/report')
+# def reportPage():
+
 
 @app.route(f'/{sN}/addUser', methods = ['GET', 'POST'])
 def addUserPage():

@@ -61,7 +61,7 @@ courseSubjects = ["Python", "Javascript", "C#", "Java", "C", "C++", "PHP", "Kotl
 
 def createViews(f):
     query = """CREATE VIEW `Greater Than 50 Students` AS
-SELECT Courses.`Course ID`, Courses.`Course Name` 
+SELECT COUNT(`Course Students`.`Course ID`) AS `Student Count`, Courses.`Course ID`, Courses.`Course Name` 
 FROM Courses
 INNER JOIN `Course Students`
 ON Courses.`Course ID` = `Course Students`.`Course ID`
