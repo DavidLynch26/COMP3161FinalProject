@@ -442,11 +442,22 @@ def toList(func):
 
 @app.route(f'/{sN}/reports')
 def reportsPage():
-    return render_template("reports.html", reports = [{"Report ID":"0", "Report Name":"Courses with 50 students and over"}, {"Report ID":"1", "Report Name":"Students doing 5 or more courses"}, {"Report ID":"2", "Report Name":"Lecturers teaching 3 or more courses"}, {"Report ID":"3", "Report Name":"Top 10 most enrolled students"}, {"Report ID":"4", "Report Name":"Top 10 students with the highest average"}])
+    return render_template("reports.html", reports = [{"Report ID":0, "Report Name":"Courses with 50 students and over"}, {"Report ID":1, "Report Name":"Students doing 5 or more courses"}, {"Report ID":2, "Report Name":"Lecturers teaching 3 or more courses"}, {"Report ID":3, "Report Name":"Top 10 most enrolled students"}, {"Report ID":4, "Report Name":"Top 10 students with the highest average"}])
 
-# @app.route(f'/{sN}/report')
-# def reportPage():
-#     return()
+@app.route(f'/{sN}/report/<report_id>&<report_name>', methods = ['GET'])
+def reportPage(report_id, report_name):   
+    report_id = int(report_id)
+    if report_id == 0:
+        content = toList(lambda: greaterThan50())
+    elif report_id == 1:
+        content = toList(lambda: students5OrMore())
+    elif report_id == 2:
+        content = toList(lambda: lecturers3OrMore())
+    elif report_id == 3:
+        content = toList(lambda: mostEnrolledCourses())
+    else:
+        content = toList(lambda: topStudentAverages())
+    return render_template("report.html", report_id = report_id, report_name = report_name, report = content)
 
 @app.route(f'/{sN}/addUser', methods = ['GET', 'POST'])
 def addUserPage():

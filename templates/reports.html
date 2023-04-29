@@ -3,7 +3,7 @@
     <h2>Reports</h2>
     <ul>
         {% for report in reports: %}
-        <li><a href="{{ url_for('reportPage', report_id = report['Report ID']) }}">{{ report['Report Name'] }}</a></li>
+        <li><a href="{{ url_for('reportPage', report_id = report['Report ID'], report_name = report['Report Name']) }}">{{ report['Report Name'] }}</a></li>
         {% endfor %}
     </ul>
 {% endblock main %}

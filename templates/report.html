@@ -1,74 +1,76 @@
 {% extends 'base.html' %}
 {% block main %}
+<h2>{{report_name}}</h2>
 <ul>
-    {% if report_id == 0:  %}
+    {% if report_id == 0  %}
        {% for content in report %}
-       <li>
-        {{content['Student Count']}}
-       </li>
-       <li>
-        {{content['Course ID']}}
-       </li>
-       <li>
-        {{content['Course Name']}}
-       </li>
+         <li>
+            <p>Student Count</p> {{content['Student Count']}}
+         </li>
+         <li>
+            <p>Course ID</p> {{content['Course ID']}}
+         </li>
+         <li>
+            <p>Course Name</p> {{content['Course Name']}}
+         </li><br>
        {% endfor %}
-    {%elif report_id == 1: %}
+    {%elif report_id == 1 %}
        {% for content in report %}
-       <li>
-        {{content['Course Count']}}
-       </li>
-       <li>
-        {{content['Student ID']}}
-       </li>
-       <li>
-        {{content['First Name']}}
-       </li>
-       <li>
-        {{content['Last Name']}}
-       </li>
+         <li>
+            <p>Course Count</p> {{content['Course Count']}}
+         </li>
+         <li>
+            <p>Student ID</p> {{content['Student ID']}}
+         </li>
+         <li>
+            <p>First Name</p> {{content['First Name']}}
+         </li>
+         <li>
+            <p>Last Name</p> {{content['Last Name']}}
+         </li><br>
        {% endfor %}
-    {%elif report_id == 2: %}
+    {%elif report_id == 2 %}
        {% for content in report %}
-       <li>
-        {{content['Course Count']}}
-       </li>
-       <li>
-        {{content['Lecturer ID']}}
-       </li>
-       <li>
-        {{content['First Name']}}
-       </li>
-       <li>
-        {{content['Last Name']}}
-       </li>
+         <li>
+            <p>Course Count</p> {{content['Course Count']}}
+         </li>
+         <li>
+            <p>Lecturer ID</p> {{content['Lecturer ID']}}
+         </li>
+         <li>
+            <p>First Name</p> {{content['First Name']}}
+         </li>
+         <li>
+            <p>Last Name</p> {{content['Last Name']}}
+         </li><br>
        {% endfor %}
-    {%elif report_id == 3: %}
-       {% for content in report %}
-       <li>
-        {{content['Student Count']}}
-       </li>
-       <li>
-        {{content['Course ID']}}
-       </li>
-       <li>
-        {{content['Course Name']}}
-       </li>
+    {%elif report_id == 3 %}
+         {% for content in report %}
+         <li>
+            <p>Student Count</p> {{content['Student Count']}}
+         </li>
+         <li>
+            <p>Course ID</p> {{content['Course ID']}}
+         </li>
+         <li>
+            <p>Course Name</p> {{content['Course Name']}}
+         </li><br>
        {% endfor %}
     {%else%}
-    <li>
-        {{content['Student Average']}}
-       </li>
-       <li>
-        {{content['Student ID']}}
-       </li>
-       <li>
-        {{content['First Name']}}
-       </li>
-       <li>
-        {{content['Last Name']}}
-       </li>
-
+    {% for content in report %}
+         <li>
+            <p>Student Average</p> {{content['Student Average']}}
+         </li>
+         <li>
+           <p>Student ID</p> {{content['Student ID']}}
+         </li>
+         <li>
+            <p>First Name</p> {{content['First Name']}}
+         </li>
+         <li>
+            <p>Last Name</p> {{content['Last Name']}}
+         </li><br>
+      {% endfor %}
     {%endif%}
 </ul>
 {% endblock main %}

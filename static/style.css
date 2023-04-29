@@ -18,3 +18,7 @@ body header a,body footer a {
 body header a:hover, body footer a:hover{
     color:#0000ff;
 }
+
+body main ul li p{
+    font-weight: bold;
+}
